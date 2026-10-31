@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   # ============================================================================
@@ -62,7 +63,7 @@ jobs:
     name: Docker Build & Vulnerability Scan
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout Repository
@@ -96,15 +97,31 @@ jobs:
     name: Deploy to Production Server
     needs: [test, security-and-build]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
 
     steps:
+      - name: Verify Deployment Secrets Configuration
+        id: check_secrets
+        env:
+          PROD_HOST: ${{ secrets.PROD_SERVER_HOST || secrets.PROD_SERVER_IP }}
+          PROD_USER: ${{ secrets.PROD_SERVER_USER || secrets.PROD_SSH_USER }}
+          PROD_KEY: ${{ secrets.PROD_SERVER_SSH_KEY || secrets.PROD_SSH_PRIVATE_KEY }}
+        run: |
+          if [ -z "$PROD_HOST" ] || [ -z "$PROD_USER" ] || [ -z "$PROD_KEY" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Deployment Skipped::Production server credentials (PROD_SERVER_HOST, PROD_SERVER_USER, PROD_SERVER_SSH_KEY) are not configured in GitHub Secrets. Automated SSH deployment is safely skipped. All build and test checks succeeded."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Production secrets detected. Proceeding with remote deployment."
+          fi
+
       - name: Execute Remote SSH Deployment
+        if: steps.check_secrets.outputs.configured == 'true'
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.PROD_SERVER_HOST }}
-          username: ${{ secrets.PROD_SERVER_USER }}
-          key: ${{ secrets.PROD_SERVER_SSH_KEY }}
+          host: ${{ secrets.PROD_SERVER_HOST || secrets.PROD_SERVER_IP }}
+          username: ${{ secrets.PROD_SERVER_USER || secrets.PROD_SSH_USER }}
+          key: ${{ secrets.PROD_SERVER_SSH_KEY || secrets.PROD_SSH_PRIVATE_KEY }}
           port: 22
           script: |
             set -e

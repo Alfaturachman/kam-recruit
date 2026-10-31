@@ -13,7 +13,7 @@
 
 **Tumpukan Teknologi:** Node.js v20 LTS, Express.js, `multer`, `exceljs`, `archiver`, `mysql2`, `helmet`, `cors`, `dotenv`, Jest, Supertest, Docker, Nginx.
 
-**Rujukan Spesifikasi:** [01_brd.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/01_brd.md), [02_prd.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/02_prd.md), [03_frd.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/03_frd.md), [04_architecture.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/04_architecture.md), [05_database.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/05_database.md), [06_desain.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/06_desain.md), [07_routing.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/07_routing.md), [08_testing.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/08_testing.md), [10_deployment.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/10_deployment.md), [12_decision_log.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/12_decision_log.md).
+**Rujukan Spesifikasi:** [01_brd.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/01_brd.md), [02_prd.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/02_prd.md), [03_frd.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/03_frd.md), [04_architecture.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/04_architecture.md), [05_database.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/05_database.md), [06_design.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/06_design.md), [07_routing.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/07_routing.md), [08_testing.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/08_testing.md), [10_deployment.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/10_deployment.md), [12_decision_log.md](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/docs/12_decision_log.md).
 
 ---
 
@@ -660,7 +660,7 @@ Sebelum sistem dinyatakan siap diserahkan dan diuji dalam sidang Kerja Praktik:
   - `DELETE /api/v1/vacancies/:id`: Hapus lowongan dengan dialog proteksi relasi pelamar `modal-delete-vacancy`.
 
 - [x] **Langkah 14.7: Pengujian Terpadu & Pembaruan Dokumentasi Teknis**  
-  Memverifikasi seluruh integrasi rute dan pengujian siklus CRUD, menjalankan pengujian otomatis Jest (10 test suites / 22 tests **PASS**), menyinkronkan aset ke `Laporan/`, dan memperbarui seluruh spesifikasi pada `docs/` (`04_architecture.md`, `06_desain.md`, `07_routing.md`, `09_user_manual.md`, `13_changelog.md`, dan `14_implementation_plan.md`).
+  Memverifikasi seluruh integrasi rute dan pengujian siklus CRUD, menjalankan pengujian otomatis Jest (10 test suites / 22 tests **PASS**), menyinkronkan aset ke `Laporan/`, dan memperbarui seluruh spesifikasi pada `docs/` (`04_architecture.md`, `06_design.md`, `07_routing.md`, `09_user_manual.md`, `13_changelog.md`, dan `14_implementation_plan.md`).
 
 ---
 
