@@ -36,7 +36,7 @@ Sistem mengadopsi perutean *Dedicated URL Routing* yang memungkinkan setiap modu
 | Alamat URL Peramban | Modul Antarmuka | Fungsi Utama |
 | :--- | :--- | :--- |
 | `http://localhost:3000/dashboard` | Dashboard & Funnel | Metrik KPI real-time & grafik rekapitulasi rekrutmen bulanan (Jan-Des) |
-| `http://localhost:3000/pelamar` | Data Pelamar (Glints) | Bank data pelamar, sortir administratif otomatis, dan dossier CV |
+| `http://localhost:3000/pelamar` | Data Pelamar | Master Data Pelamar, sortir administratif otomatis, dan dossier CV |
 | `http://localhost:3000/interview` | Jadwal & Follow-up | Pelacakan konfirmasi wawancara & integrasi template WhatsApp resmi |
 | `http://localhost:3000/rekapitulasi` | Rekapitulasi Dua Tahap | Matriks rekapitulasi kelulusan Tahap I & Tahap II serta ekspor CSV |
 | `http://localhost:3000/mitra` | Master Mitra & Kirim CV | CRUD permintaan mitra aktif & penyerahan berkas CV kandidat lolos HRD |
@@ -49,7 +49,7 @@ Sistem mengadopsi perutean *Dedicated URL Routing* yang memungkinkan setiap modu
    * Menampilkan 4 KPI utama: Total Pelamar, Lolos Sortir, Terkonfirmasi Interview, dan Kandidat Siap Mitra.
    * Grafik visualisasi rekrutmen 12 bulan (Januari hingga Desember) yang 100% dinamis dihitung melalui agregasi SQL riil dari tabel `candidates` tanpa data fiktif atau hardcoded.
 
-2. **Bank Data Pelamar Glints (Penyortiran Tahap I)**:
+2. **Master Data Pelamar Glints (Penyortiran Tahap I)**:
    * Ekstraksi cerdas 28 kolom data Glints Excel/CSV.
    * Evaluasi kesesuaian kualifikasi administratif otomatis (usia, pendidikan, dan domisili).
    * Pratinjau dossier CV eksekutif terstandarisasi siap cetak A4.
@@ -83,7 +83,7 @@ kam-recruit/
 │   ├── config/
 │   │   └── database.js          # Pool koneksi MySQL 8.0 (mysql2/promise)
 │   ├── controllers/
-│   │   ├── applicantController.js      # Ingesti Glints & Bank Data Pelamar
+│   │   ├── applicantController.js      # Ingesti Glints & Master Data Pelamar
 │   │   ├── communicationController.js  # Generator WA & Konfirmasi Respon
 │   │   ├── dashboardController.js      # Metrik KPI & Agregasi Bulanan Dinamis
 │   │   ├── handoverController.js       # Bundel ZIP CV & Serah Terima Mitra

@@ -52,7 +52,7 @@ Sistem mendukung perutean URL langsung (*Direct Deep-Link*) sehingga Anda dapat 
 | Alamat URL Peramban | Modul Antarmuka | Fungsi Utama |
 | :--- | :--- | :--- |
 | `http://localhost:3000/dashboard` | **Dashboard & Funnel** | Metrik analitik rekrutmen & grafik rekapitulasi bulanan riil (Jan–Des) |
-| `http://localhost:3000/pelamar` | **Data Pelamar (Glints)** | Bank data pelamar, penyortiran administratif otomatis & dossier pelamar |
+| `http://localhost:3000/pelamar` | **Data Pelamar** | Master Data Pelamar, penyortiran administratif otomatis & dossier pelamar |
 | `http://localhost:3000/interview` | **Jadwal & Follow-up** | Pelacakan jadwal wawancara HRD & gateway template WhatsApp Web |
 | `http://localhost:3000/rekapitulasi` | **Rekapitulasi Dua Tahap** | Matriks evaluasi hasil seleksi Tahap I & Tahap II serta ekspor CSV |
 | `http://localhost:3000/mitra` | **Master Mitra & Kirim CV** | Manajemen CRUD permintaan mitra aktif & penyerahan berkas CV |
@@ -85,7 +85,14 @@ flowchart TD
   2. Gunakan dropdown filter posisi (contoh: *Customer Service Rep* atau *Teknisi Jaringan Fiber*).
   3. Periksa kolom **Pengalaman & Sertifikat** pada baris kandidat untuk melihat sekilas masa kerja dan sertifikasi lisensi BNSP yang dimiliki.
   4. Klik tombol **Lihat CV** untuk memeriksa riwayat detail di modal dossier.
-  5. Jika memenuhi kriteria, klik tombol biru **Loloskan** pada kolom aksi. Status kandidat otomatis berubah menjadi `Lolos Sortir (I)`.
+  5. Jika memenuhi kriteria, klik tombol biru **Loloskan** pada kolom aksi. Sistem akan menampilkan **Modal Konfirmasi Loloskan Pelamar** untuk memverifikasi keputusan Anda. Klik **Ya, Loloskan** untuk mengonfirmasi. Status kandidat akan berubah menjadi `Siap Interview` (Lolos Sortir).
+  6. **Membatalkan Status Lolos (*Revert*)**:
+     - Jika terdapat kekeliruan atau kandidat perlu ditinjau ulang, klik tombol **Batalkan** di bawah label `Siap Interview`.
+     - Konfirmasi pembatalan pada modal dialog. Status kandidat akan dikembalikan ke `Belum Disortir`, jadwal wawancara dibatalkan, dan respon kehadiran di-reset ke `Belum Dihubungi`.
+  7. **Penyortiran Massal (*Bulk Action*)**:
+     - Centang kotak di sebelah kiri nama pelamar yang ingin diproses secara serentak.
+     - Klik tombol **Tandai Lolos Sortir** pada bilah atas tabel untuk meloloskan semua kandidat yang dipilih melalui dialog konfirmasi massal.
+     - Klik tombol **Batalkan Sortir** untuk membatalkan status lolos kandidat yang dipilih secara serentak.
 
 ---
 
@@ -96,11 +103,17 @@ Modul ini digunakan untuk menghubungi kandidat via WhatsApp dan mendokumentasika
 2. Klik tombol **Broadcast Konfirmasi WA** pada pelamar yang lolos sortir.
 3. Sistem secara otomatis membuka tautan WhatsApp resmi dengan template pesan bahasa Indonesia formal tanpa emoji:
    > *"Selamat Siang Bpk/Ibu [Nama Pelamar], Kami dari Tim HRD PT Kinarya Alihdaya Mandiri mengundang Anda untuk mengikuti sesi wawancara..."*
-4. **Memperbarui Status Respon Pelamar**:
+4. **Memperbarui Status Respon Pelamar & Jadwal Wawancara**:
    - Jika pelamar membalas dan menyetujui jadwal, pilih status **Bersedia**.
    - Jika pelamar mengonfirmasi mengundurkan diri/bekerja di tempat lain, pilih **Menolak / Batal**.
    - Jika pesan centang dua namun tidak ada balasan setelah 3x follow-up, pilih **Tidak Merespons**.
-5. **Mengubah & Mengkustomisasi Template WhatsApp**:
+5. **Pengaturan Tanggal & Waktu Wawancara Presisi (Date & Time Picker)**:
+   - Klik tombol **Ubah Jadwal** pada kandidat untuk membuka modal `#modal-schedule`.
+   - Pilih tanggal menggunakan kalender (*Date Picker*) dan tentukan jam (*Time Picker*) dalam WIB.
+   - Kotak pratinjau format WhatsApp otomatis memperbarui kalimat jadwal secara riil (contoh: *Kamis, 5 November 2026 pukul 09.00 WIB*).
+   - **Terapkan Serentak**: Centang opsi *"Terapkan tanggal & jam ini serentak ke semua kandidat"* untuk menyinkronkan seluruh jadwal kandidat wawancara sekaligus tanpa perlu mengedit satu per satu.
+   - Recruiter juga dapat mengklik tombol **Atur Jadwal Serentak** pada banner atas modul untuk membuka dialog pengaturan serentak.
+6. **Mengubah & Mengkustomisasi Template WhatsApp**:
    - Pada panel sebelah kanan (*Template WhatsApp Otomatis*), klik tombol **Edit Template**.
    - Pilih kategori template yang ingin disesuaikan (*Undangan*, *H-1*, atau *Lolos HRD*).
    - Sunting kata-kata draf pesan sesuai kebutuhan komunikasi. Sisipkan parameter dinamis otomatis dengan mengklik tag variabel: `+ {nama}`, `+ {posisi}`, `+ {mitra}`, atau `+ {jadwal}`.
@@ -124,7 +137,7 @@ Gunakan modul ini pada saat dan setelah sesi wawancara tatap muka atau Google Me
    - Kandidat yang lolos otomatis tercatat pada **Rekapitulasi Tahap II** dan siap diserahkan ke mitra.
    - Data kualifikasi awal (Tahap I) tetap aman dan tidak pernah tertimpa di master database.
 5. **Navigasi & Paginasi Tabel Rekapitulasi**:
-   - Recruiter dapat beralih antara **Rekapitulasi Tahap I (Pra-Wawancara)** dan **Rekapitulasi Tahap II (Pasca-Wawancara)** melalui tombol pil navigasi di atas tabel.
+   - Recruiter dapat beralih antara **Rekapitulasi Tahap I** dan **Rekapitulasi Tahap II** melalui tombol pil navigasi di atas tabel.
    - Tabel dilengkapi kontrol paginasi dengan pilihan baris: **5, 10, 25, atau 50** kandidat per halaman.
    - Nomor urut baris (*No*) secara cerdas menyesuaikan offset halaman yang sedang aktif.
 
@@ -146,6 +159,8 @@ Modul ini menyajikan lembar CV profesional berstandar Apple HIG lengkap dengan r
    - Perhatikan bahwa seluruh bilah navigasi dan tombol aplikasi otomatis disembunyikan, menghasilkan lembar CV yang bersih dan rapi.
 4. **Menyalin Profil Cepat**:
    - Klik tombol **Salin Profil** untuk menyalin seluruh ringkasan CV kandidat ke *clipboard*, siap ditempelkan (*paste*) ke pesan koordinasi tim.
+5. **Menutup Modal Dialog Fleksibel (*Non-Strict Dismiss*)**:
+   - Seluruh jendela modal dalam sistem (Dossier CV, Keputusan Wawancara, Impor Glints, Tambah Mitra, Jadwal Wawancara, dan Konfirmasi Sortir) dapat ditutup sewaktu-waktu dengan mengklik area gelap latar belakang di luar kotak dialog, menekan tombol **Batal / Tutup**, atau menekan tombol keyboard `Escape`.
 
 ---
 
@@ -182,23 +197,30 @@ Akses modul ini melalui URL `http://localhost:3000/mitra` atau klik menu **Maste
 
 #### B. Menyerahkan Berkas CV Kandidat Terpilih (Sub-Tab "Kirim CV ke Mitra")
 1. Klik tombol sub-tab **Kirim CV ke Mitra**.
-2. Halaman akan menampilkan daftar kartu kandidat terpilih dalam tata letak **1 Kolom Vertikal memanjang ke bawah**, menyajikan detail kualifikasi pendidikan, riwayat kerja Glints terverifikasi, lisensi sertifikasi BNSP, dan catatan pewawancara HRD.
+2. Halaman menampilkan **Tabel Daftar Kandidat Terpilih Siap Penyerahan** (`#thirdparty-tbody`) yang menyajikan:
+   - **Kandidat**: Avatar inisial, nama lengkap (klik untuk pratinjau detail CV), domisili dan usia.
+   - **Posisi & Mitra Rekanan**: Lowongan jabatan dan korporasi mitra penempatan.
+   - **Pendidikan**: Tingkat pendidikan dan nama universitas/sekolah.
+   - **Pengalaman Kerja**: Pengalaman terakhir terverifikasi Glints atau status *Fresh Graduate*.
+   - **Sertifikasi**: Lisensi kompetensi resmi BNSP/sertifikat keahlian.
+   - **Status HRD**: Keputusan kelulusan wawancara dan catatan evaluasi recruiter.
+   - **Aksi Penyerahan**: Tombol **Lihat CV** dan **Kirim ke Mitra**.
 3. **Mengunduh Bundel CV Massal (ZIP)**:
-   - Klik tombol merah **Unduh Bundel CV (ZIP)** pada bagian atas halaman.
-   - Sistem akan mengemas seluruh berkas CV kandidat yang lolos seleksi HRD ke dalam 1 file arsip ZIP siap kirim.
+   - Klik tombol merah **Unduh Bundel CV (ZIP)** pada bilah atas halaman.
+   - Sistem mengemas seluruh berkas CV kandidat yang lolos seleksi HRD ke dalam 1 file arsip ZIP siap kirim.
 4. **Menyerahkan Berkas Per Kandidat**:
-   - Klik tombol **Lihat CV Lengkap** untuk membuka dossier eksekutif pelamar.
+   - Klik tombol **Lihat CV** untuk membuka dossier eksekutif pelamar.
    - Klik tombol **Kirim ke Mitra** untuk mencatat status penyerahan resmi berkas ke perusahaan mitra rekanan.
 
 ---
 
-### 3.6 Navigasi Paginasi & Pengaturan Ukuran Tampilan Data
-Setiap modul tabel data dan kartu kandidat (Bank Data Pelamar, Daftar Lowongan Dashboard, Jadwal & Follow-up Wawancara, Permintaan Mitra Aktif, dan Kirim CV ke Mitra) dilengkapi bilah kontrol paginasi universal berstandar Apple HIG:
+### 3.6 Navigasi Paginasi Universal & Pengaturan Ukuran Tampilan Data
+Setiap modul tabel data dan kartu kandidat (Master Data Pelamar, Daftar Lowongan Dashboard, Jadwal & Follow-up Wawancara, Permintaan Mitra Aktif, dan Tabel Penyerahan CV ke Mitra) dilengkapi bilah kontrol paginasi universal berstandar Apple HIG:
 
 1. **Mengubah Jumlah Data yang Ditampilkan (*Page Size*)**:
-   - Gunakan menu *dropdown* di sisi kanan bawah tabel (pilihan: 5, 8, 15, atau 25 data per halaman).
+   - Gunakan menu *dropdown* di sisi kanan bawah tabel dengan opsi terstandarisasi: **5, 10, 20, atau 50** data per halaman.
 2. **Navigasi Halaman**:
-   - Klik tombol nomor halaman (1, 2, 3, dst.) untuk melompat langsung ke halaman yang diinginkan. Halaman yang sedang aktif ditandai warna biru korporat PT KAM (`bg-brand-600`).
+   - Klik tombol nomor halaman (1, 2, 3, dst.) untuk melompat langsung ke halaman yang diinginkan. Halaman yang sedang aktif ditandai warna biru korporat PT KAM (`bg-blue-900 text-white font-bold`).
    - Gunakan tombol **Sebelumnya** dan **Selanjutnya** untuk beralih halaman secara bertahap.
 3. **Penyaringan & Pencarian Cerdas**:
    - Saat Anda mengetik di kolom pencarian atau mengubah filter dropdown, sistem secara otomatis mengatur ulang posisi ke halaman pertama (*page 1*) agar seluruh hasil saringan dapat langsung ditinjau.

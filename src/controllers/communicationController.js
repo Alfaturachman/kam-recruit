@@ -70,7 +70,37 @@ async function updateInterviewStatus(req, res) {
   }
 }
 
+/**
+ * PUT /api/v1/candidates/bulk/interview-schedule
+ * Bulk update interview schedule for multiple or all qualified candidates
+ */
+async function bulkUpdateInterviewSchedule(req, res) {
+  try {
+    const { candidateIds, interviewSchedule, statusInterview } = req.body;
+
+    if (!interviewSchedule) {
+      return res.status(400).json({ success: false, message: 'Jadwal wawancara wajib diisi.' });
+    }
+
+    const affected = await Candidate.bulkUpdateInterviewSchedule({
+      candidateIds,
+      interviewSchedule,
+      statusInterview
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `Jadwal wawancara berhasil diperbarui serentak untuk ${affected} kandidat.`,
+      affectedRows: affected
+    });
+  } catch (err) {
+    console.error('[BULK UPDATE SCHEDULE ERROR]', err);
+    return res.status(500).json({ success: false, message: 'Gagal memperbarui jadwal wawancara secara serentak.', error: err.message });
+  }
+}
+
 module.exports = {
   getCandidateWaLink,
-  updateInterviewStatus
+  updateInterviewStatus,
+  bulkUpdateInterviewSchedule
 };

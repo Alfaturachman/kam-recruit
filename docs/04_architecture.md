@@ -312,11 +312,11 @@ kam-recruit/public/
 │   ├── header.html              # Top bar, logo PT KAM, status sinkronisasi, profil
 │   ├── sidebar.html             # Menu navigasi desktop & kuota mitra rekanan
 │   ├── tab-dashboard.html       # Dashboard utama, 4 KPI, grafik bulanan, tabel lowongan
-│   ├── tab-pelamar.html         # Toolbar pencarian & bank data pelamar Glints
+│   ├── tab-pelamar.html         # Toolbar pencarian & Master Data Pelamar Glints
 │   ├── tab-interview.html       # Pelacakan jadwal wawancara & gateway WhatsApp
 │   ├── tab-rekapitulasi.html    # Rekapitulasi Tahap I & Tahap II + ekspor berkas
-│   ├── tab-penyerahan.html      # Penyerahan CV pihak ketiga (1 kolom vertikal)
-│   ├── modals.html              # Dialog modal (Dossier, Scoring, Import Glints)
+│   ├── tab-penyerahan.html      # Master Mitra & Tabel Penyerahan CV pihak ketiga terstruktur
+│   ├── modals.html              # Dialog modal (Dossier, Scoring, Import, Lowongan, Jadwal, Konfirmasi Sortir)
 │   ├── toast.html               # Notifikasi interaktif
 │   └── mobile-nav.html          # Floating bottom dock bar khusus ponsel
 ├── js/                          # Modul Logika JavaScript Terisolasi (Presenters)
@@ -387,7 +387,7 @@ sequenceDiagram
     ClientRouter->>ClientRouter: renderMitraVacanciesTable()
 
     Note over Recruiter,Express: 3. Navigasi Antar Tab (In-App Tab Switching)
-    Recruiter->>ClientRouter: Klik Menu "Data Pelamar (Glints)"
+    Recruiter->>ClientRouter: Klik Menu "Data Pelamar"
     ClientRouter->>ClientRouter: switchTab('pelamar', true)
     ClientRouter->>Recruiter: history.pushState({}, '', '/pelamar') (Tanpa reload peramban)
 ```

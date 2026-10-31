@@ -261,6 +261,29 @@ graph LR
 }
 ```
 
+#### 5b. `PUT /candidates/bulk/interview-schedule`
+* **Deskripsi**: Memperbarui tanggal, jam, atau respon status wawancara secara serentak ke banyak kandidat sekaligus serta sinkronisasi template pesan WhatsApp.
+* **Request Body**:
+```json
+{
+  "candidate_ids": [1, 2, 3],
+  "interview_schedule": "Kamis, 5 November 2026 pukul 09.00 WIB",
+  "status_interview": "Bersedia"
+}
+```
+* **Response (HTTP 200)**:
+```json
+{
+  "success": true,
+  "message": "Jadwal wawancara 3 kandidat berhasil diperbarui serentak.",
+  "data": {
+    "affected_rows": 3,
+    "interview_schedule": "Kamis, 5 November 2026 pukul 09.00 WIB",
+    "status_interview": "Bersedia"
+  }
+}
+```
+
 ---
 
 ### 3.5 Modul Penilaian Wawancara HRD & Rekapitulasi
@@ -326,7 +349,7 @@ Sistem mengadopsi pola *Hybrid Single Page Application Routing* yang memadukan s
 | :--- | :--- | :--- | :--- |
 | `http://localhost:3000/` | `tab-dashboard` | `GET` | Halaman beranda utama sistem rekrutmen PT KAM |
 | `http://localhost:3000/dashboard` | `tab-dashboard` | `GET` | Dashboard analitik KPI & grafik rekrutmen bulanan Jan–Des |
-| `http://localhost:3000/pelamar` | `tab-pelamar` | `GET` | Bank data pelamar Glints & penyortiran administratif |
+| `http://localhost:3000/pelamar` | `tab-pelamar` | `GET` | Master Data Pelamar Glints & penyortiran administratif |
 | `http://localhost:3000/interview` | `tab-interview` | `GET` | Pelacakan jadwal wawancara HRD & gateway WhatsApp |
 | `http://localhost:3000/jadwal` | `tab-interview` | `GET` | *Alias* alternatif untuk jadwal & tindak lanjut WhatsApp |
 | `http://localhost:3000/rekapitulasi` | `tab-rekapitulasi` | `GET` | Rekapitulasi evaluasi seleksi terpadu (Tahap I & Tahap II) |

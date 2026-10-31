@@ -280,15 +280,52 @@ class Candidate {
    * Bulk update status sortir for multiple candidates
    */
   static async bulkUpdateSortir(candidateIds, statusSortir = 'Lolos Sortir') {
-    const [result] = await pool.query(
-      `UPDATE candidates 
-       SET status_sortir = ?,
-           status_interview = IF(status_interview = 'Belum Dihubungi', 'Bersedia', status_interview),
-           interview_schedule = IF(interview_schedule IS NULL OR interview_schedule = '-', 'Kamis, 5 Nov (13.00 WIB)', interview_schedule),
-           updated_at = NOW()
-       WHERE id IN (?)`,
-      [statusSortir, candidateIds]
-    );
+    if (statusSortir === 'Belum Disortir' || statusSortir === 'Tidak Memenuhi Syarat') {
+      const [result] = await pool.query(
+        `UPDATE candidates 
+         SET status_sortir = ?,
+             status_interview = 'Belum Dihubungi',
+             interview_schedule = '-',
+             status_hrd = 'Menunggu Seleksi',
+             updated_at = NOW()
+         WHERE id IN (?)`,
+        [statusSortir, candidateIds]
+      );
+      return result.affectedRows;
+    } else {
+      const [result] = await pool.query(
+        `UPDATE candidates 
+         SET status_sortir = ?,
+             status_interview = IF(status_interview = 'Belum Dihubungi', 'Bersedia', status_interview),
+             interview_schedule = IF(interview_schedule IS NULL OR interview_schedule = '-', 'Kamis, 5 Nov (13.00 WIB)', interview_schedule),
+             updated_at = NOW()
+         WHERE id IN (?)`,
+        [statusSortir, candidateIds]
+      );
+      return result.affectedRows;
+    }
+  }
+
+  /**
+   * Bulk update candidate interview schedule and/or response status
+   */
+  static async bulkUpdateInterviewSchedule({ candidateIds, interviewSchedule, statusInterview }) {
+    let query = 'UPDATE candidates SET interview_schedule = ?, updated_at = NOW()';
+    const params = [interviewSchedule];
+
+    if (statusInterview) {
+      query += ', status_interview = ?';
+      params.push(statusInterview);
+    }
+
+    if (Array.isArray(candidateIds) && candidateIds.length > 0) {
+      query += ' WHERE id IN (?)';
+      params.push(candidateIds);
+    } else {
+      query += " WHERE status_sortir = 'Lolos Sortir'";
+    }
+
+    const [result] = await pool.query(query, params);
     return result.affectedRows;
   }
 

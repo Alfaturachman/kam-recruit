@@ -31,11 +31,10 @@ function setRekapPhase(phase, resetPage = true) {
     thead.innerHTML = `
       <tr>
         <th class="p-3">No</th>
-        <th class="p-3">Nama Lengkap & Kontak</th>
+        <th class="p-3">Nama & Kontak</th>
         <th class="p-3">Posisi & Mitra Rekanan</th>
-        <th class="p-3">Kualifikasi Pendidikan</th>
-        <th class="p-3">Status Konfirmasi Interview</th>
-        <th class="p-3">Log Terakhir Master Data</th>
+        <th class="p-3">Pendidikan</th>
+        <th class="p-3">Status Konfirmasi</th>
       </tr>
     `;
 
@@ -45,7 +44,7 @@ function setRekapPhase(phase, resetPage = true) {
     if (currentRekapList.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" class="p-8 text-center text-slate-400">
+          <td colspan="5" class="p-8 text-center text-slate-400">
             Belum ada data kandidat lolos sortir pada Tahap I.
           </td>
         </tr>
@@ -75,7 +74,6 @@ function setRekapPhase(phase, resetPage = true) {
           ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 whitespace-nowrap shrink-0">Bersedia Hadir</span>'
           : '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 whitespace-nowrap shrink-0">Tidak Merespons</span>'}
         </td>
-        <td class="p-3 text-[11px] text-slate-400 font-mono">30-10-2026 14:20:11 (HRD)</td>
       `;
       tbody.appendChild(tr);
     });
@@ -91,9 +89,9 @@ function setRekapPhase(phase, resetPage = true) {
         <th class="p-3">No</th>
         <th class="p-3">Nama Kandidat</th>
         <th class="p-3">Posisi Outsourcing</th>
-        <th class="p-3">Hasil Wawancara HRD</th>
+        <th class="p-3">Hasil Wawancara</th>
         <th class="p-3">Catatan Evaluator HRD</th>
-        <th class="p-3">Status Serah ke Pihak Ketiga</th>
+        <th class="p-3">Status Serah</th>
       </tr>
     `;
 
@@ -144,14 +142,13 @@ function setRekapPhase(phase, resetPage = true) {
     });
   }
 
-  // Render universal pagination bar with options [5, 10, 25, 50]
+  // Render universal pagination bar
   if (typeof renderPaginationBar === 'function') {
     renderPaginationBar({
       containerId: 'rekapitulasi-pagination',
       totalItems: currentRekapList.length,
       currentPage: rekapCurrentPage,
       pageSize: rekapPageSize,
-      pageSizeOptions: [5, 10, 25, 50],
       onPageChange: 'changeRekapPage',
       onPageSizeChange: 'changeRekapPageSize',
       itemLabel: 'kandidat'
@@ -175,4 +172,4 @@ function exportRekapExcel() {
   window.location.href = '/api/v1/recapitulation/export-excel';
 }
 
-    // Modal Operations
+// Modal Operations

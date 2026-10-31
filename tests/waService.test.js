@@ -43,5 +43,18 @@ describe('WhatsApp Communication Module (Non-Emoji Compliance - ADR-004)', () =>
     expect(res.body.success).toBeTruthy();
     expect(res.body.data.status_interview).toEqual('Bersedia');
   });
+
+  it('harus memperbarui jadwal interview secara serentak (bulk) via API PUT /api/v1/candidates/bulk/interview-schedule', async () => {
+    const res = await request(app)
+      .put('/api/v1/candidates/bulk/interview-schedule')
+      .send({
+        interviewSchedule: 'Senin, 10 November 2026 pukul 10.00 WIB',
+        statusInterview: 'Bersedia'
+      });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.success).toBeTruthy();
+    expect(res.body.affectedRows).toBeGreaterThanOrEqual(0);
+  });
 });
 

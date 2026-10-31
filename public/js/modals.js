@@ -11,7 +11,7 @@
       const initials = c.nama.split(' ').map(n => n[0]).slice(0, 2).join('');
       document.getElementById('m-avatar').textContent = initials;
       document.getElementById('m-name').textContent = c.nama;
-      document.getElementById('m-posisi').innerHTML = `${c.posisi} &bull; Mitra: <span class="font-bold text-slate-800">${c.mitra}</span>`;
+      document.getElementById('m-posisi').innerHTML = `${c.posisi}, Mitra <span class="font-bold text-slate-800">${c.mitra}</span>`;
       document.getElementById('m-glints-id').textContent = `GLINTS-ID-${10000 + c.id}`;
       document.getElementById('m-status-sortir-badge').textContent = c.statusSortir;
 
@@ -20,7 +20,6 @@
       document.getElementById('m-email').textContent = c.email;
       document.getElementById('m-edu').textContent = `${c.pendidikan} - ${c.kampus}`;
       document.getElementById('m-domisili').textContent = `${c.domisili} (${c.usia} Thn)`;
-      document.getElementById('m-cv-file').textContent = `CV_${c.nama.replace(/\s+/g, '_')}_Glints_Verified.pdf`;
 
       // Executive Summary
       document.getElementById('m-summary').textContent = c.ringkasan || c.catatan || 'Kandidat memenuhi kualifikasi umum dasar yang dipersyaratkan oleh mitra perusahaan.';
@@ -47,7 +46,7 @@
                 <strong class="text-slate-900 font-bold text-xs">${exp.posisi}</strong>
                 <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-blue-50 text-blue-900 border border-blue-200/60 whitespace-nowrap shrink-0">${exp.perusahaan}</span>
               </div>
-              <span class="text-slate-400 font-mono text-[11px] whitespace-nowrap shrink-0">${exp.periode} &bull; ${exp.lokasi}</span>
+              <span class="text-slate-400 text-[11px] whitespace-nowrap shrink-0">${exp.periode}, ${exp.lokasi}</span>
             </div>
             ${dutiesHtml}
           `;
@@ -109,18 +108,26 @@
       const actionContainer = document.getElementById('m-action-btn-container');
       if (c.statusSortir !== 'Lolos Sortir') {
         actionContainer.innerHTML = `
-          <button onclick="quickApproveSortir(${c.id}); closeModal('modal-candidate');" class="px-3.5 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-xs transition cursor-pointer shadow-xs">
+          <button onclick="closeModal('modal-candidate');" class="w-full sm:w-auto px-4 py-2 border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100 text-xs transition cursor-pointer">
+            Tutup
+          </button>
+          <button onclick="closeModal('modal-candidate'); openConfirmSortirModal(${c.id}, 'approve');" class="w-full sm:w-auto px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-xs transition cursor-pointer shadow-xs">
             Loloskan ke Wawancara HRD (Tahap I)
           </button>
         `;
       } else {
         const hrdBtnText = (c.statusHRD === 'Lolos Seleksi HRD' || c.statusHRD === 'Tidak Lolos') ? 'Ubah Keputusan Wawancara HRD' : 'Beri Keputusan Wawancara HRD';
         actionContainer.innerHTML = `
-          <button onclick="closeModal('modal-candidate'); prepareScoringModal(${c.id});" class="px-3.5 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-xs transition cursor-pointer flex items-center space-x-1.5 shadow-xs">
-            <svg class="w-3.5 h-3.5 text-blue-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            <span>${hrdBtnText}</span>
-          </button>
-          <button onclick="closeModal('modal-candidate'); selectCandidateForWa(${c.id}); switchTab('interview');" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition cursor-pointer flex items-center space-x-1.5 shadow-xs">
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="closeModal('modal-candidate'); prepareScoringModal(${c.id});" class="w-full sm:w-auto px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-xs transition cursor-pointer flex items-center justify-center space-x-1.5 shadow-xs">
+              <svg class="w-3.5 h-3.5 text-blue-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              <span>${hrdBtnText}</span>
+            </button>
+            <button onclick="closeModal('modal-candidate'); openConfirmSortirModal(${c.id}, 'cancel');" title="Batalkan status lolos dan kembalikan ke Belum Disortir" class="w-full sm:w-auto px-3.5 py-2 border border-slate-200 hover:bg-red-50 hover:text-red-700 hover:border-red-200 text-slate-600 font-semibold rounded-xl text-xs transition cursor-pointer">
+              Batalkan Lolos
+            </button>
+          </div>
+          <button onclick="closeModal('modal-candidate'); selectCandidateForWa(${c.id}); switchTab('interview');" class="w-full sm:w-auto px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition cursor-pointer flex items-center justify-center space-x-1.5 shadow-xs">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             <span>Hubungi via WA</span>
           </button>
@@ -208,7 +215,7 @@
           const json = await res.json();
           if (json.success) {
             closeModal('modal-scoring');
-            showToast(`Keputusan wawancara ${c.nama} disimpan ke MySQL sebagai '${statusHrd}'.`);
+            showToast(`Keputusan wawancara ${c.nama} berhasil disimpan sebagai '${statusHrd}'.`);
             await fetchApplicants();
             await fetchDashboardMetrics();
             return;

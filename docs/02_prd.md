@@ -47,7 +47,7 @@ sequenceDiagram
     actor Mitra as Pihak Ketiga (Mitra User)
 
     Pelamar->>Sys: 1. Berkas pendaftaran diimpor dari Glints
-    HRD->>Sys: 2. Buka Bank Pelamar & Terapkan Filter Kriteria
+    HRD->>Sys: 2. Data Pelamar & Terapkan Filter Kriteria
     Sys-->>HRD: 3. Tampilkan kandidat yang lolos kualifikasi dasar
     HRD->>Sys: 4. Setujui Lolos Sortir (Rekapitulasi Tahap I)
     HRD->>Sys: 5. Generate template WhatsApp & Hubungi Pelamar

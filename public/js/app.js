@@ -148,6 +148,37 @@ function closeModal(modalId) {
   if (modal) modal.classList.add('hidden');
 }
 
+/**
+ * Setup non-strict modal dismiss behavior:
+ * Closes modal when clicking anywhere on the backdrop outside the modal dialog,
+ * or when the user presses the Escape key.
+ */
+let modalBackdropInitialized = false;
+function setupModalBackdropDismiss() {
+  if (modalBackdropInitialized) return;
+  modalBackdropInitialized = true;
+
+  // Delegate click on any modal backdrop
+  document.addEventListener('click', (e) => {
+    const el = e.target;
+    if (el && el.id && el.id.startsWith('modal-') && el.classList.contains('fixed') && !el.classList.contains('hidden')) {
+      closeModal(el.id);
+    }
+  });
+
+  // Support closing open modal with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const openModals = document.querySelectorAll('.fixed.inset-0[id^="modal-"]:not(.hidden)');
+      if (openModals.length > 0) {
+        const topModal = openModals[openModals.length - 1];
+        closeModal(topModal.id);
+      }
+    }
+  });
+}
+setupModalBackdropDismiss();
+
 function persistCandidates() {
   try {
     localStorage.setItem('kam_candidates_db', JSON.stringify(candidates));
@@ -176,14 +207,19 @@ function resetSimulationData() {
 }
 
 /**
- * Universal Apple HIG Pagination Controller
+ * Shared Reusable Pagination Component & Configuration
  */
+const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+const pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS;
+window.DEFAULT_PAGE_SIZE_OPTIONS = DEFAULT_PAGE_SIZE_OPTIONS;
+window.pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS;
+
 function renderPaginationBar({
   containerId,
   totalItems,
   currentPage,
   pageSize,
-  pageSizeOptions = [5, 8, 15, 25],
+  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
   onPageChange,
   onPageSizeChange,
   itemLabel = 'data'
@@ -247,7 +283,7 @@ function renderPaginationBar({
     <div class="flex flex-col sm:flex-row items-center justify-between gap-3 w-full text-xs">
       <div class="flex items-center space-x-3 text-slate-500">
         <span>Menampilkan <strong>${startItem} - ${endItem}</strong> dari <strong>${totalItems}</strong> ${itemLabel}</span>
-        ${pageSizeSelectHtml ? `<span class="text-slate-300 hidden sm:inline">&bull;</span>` : ''}
+        ${pageSizeSelectHtml ? `<span class="h-3 w-px bg-slate-200 hidden sm:inline-block"></span>` : ''}
         ${pageSizeSelectHtml}
       </div>
       <div class="inline-flex items-center space-x-1.5">

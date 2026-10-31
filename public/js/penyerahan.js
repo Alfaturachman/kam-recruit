@@ -228,7 +228,6 @@ function renderMitraVacanciesTable(items = null) {
       totalItems: data.length,
       currentPage: mitraVacanciesPage,
       pageSize: mitraVacanciesPageSize,
-      pageSizeOptions: [3, 5, 10, 20],
       onPageChange: 'changeMitraVacanciesPage',
       onPageSizeChange: 'changeMitraVacanciesPageSize',
       itemLabel: 'permintaan mitra'
@@ -469,30 +468,35 @@ async function executeDeleteVacancy(isForced) {
  * Render Candidate Cards Ready for Third-Party (1 Kolom Vertikal) with Pagination
  */
 function renderThirdPartyGrid() {
-  const container = document.getElementById('thirdparty-grid');
-  if (!container) return;
-  container.innerHTML = '';
+  const tbody = document.getElementById('thirdparty-tbody') || document.getElementById('thirdparty-grid');
+  if (!tbody) return;
+  tbody.innerHTML = '';
 
   const qualified = (candidates || []).filter(c => c.statusHRD === 'Lolos Seleksi HRD');
   currentThirdPartyList = qualified;
 
-  // Update badge
+  // Update badges
   const badgeCv = document.getElementById('subtab-cv-count');
   if (badgeCv) badgeCv.textContent = qualified.length;
+
+  const countBadge = document.getElementById('thirdparty-count-badge');
+  if (countBadge) countBadge.textContent = `${qualified.length} Kandidat Siap Serah`;
 
   const paginationContainer = document.getElementById('thirdparty-pagination');
 
   if (qualified.length === 0) {
-    container.innerHTML = `
-      <div class="p-12 text-center bg-white rounded-3xl border border-slate-200">
-        <div class="max-w-sm mx-auto space-y-3">
-          <div class="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto text-red-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="p-12 text-center text-slate-400">
+          <div class="max-w-sm mx-auto space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center mx-auto text-slate-400">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <p class="text-xs font-bold text-slate-700">Belum Ada Kandidat Lolos Seleksi HRD</p>
+            <p class="text-[11px] text-slate-400 leading-relaxed">Kandidat yang telah dinilai dan dinyatakan 'Lolos Seleksi HRD' pada evaluasi wawancara akan otomatis muncul di sini untuk penyerahan berkas ke mitra.</p>
           </div>
-          <h4 class="text-sm font-bold text-slate-800">Belum Ada Kandidat Lolos Seleksi HRD</h4>
-          <p class="text-xs text-slate-500 leading-relaxed">Kandidat yang telah dinilai dan dinyatakan 'Lolos Seleksi HRD' pada evaluasi wawancara akan otomatis muncul di sini untuk serah terima berkas CV ke mitra.</p>
-        </div>
-      </div>
+        </td>
+      </tr>
     `;
     if (paginationContainer) paginationContainer.innerHTML = '';
     return;
@@ -506,98 +510,64 @@ function renderThirdPartyGrid() {
 
   pageItems.forEach(c => {
     const topExp = (c.pengalaman && c.pengalaman.length > 0)
-      ? `${c.pengalaman[0].posisi} (${c.pengalaman[0].periode?.split('(')[1]?.replace(')', '') || c.pengalaman[0].perusahaan})`
+      ? `${c.pengalaman[0].posisi} (${c.pengalaman[0].perusahaan})`
       : 'Fresh Graduate';
 
     const topCert = (c.sertifikat && c.sertifikat.length > 0)
-      ? `${c.sertifikat[0].nama} (${c.sertifikat[0].penerbit?.split('/')[0].trim() || ''})`
-      : 'Sertifikat Kompetensi Terverifikasi';
+      ? `${c.sertifikat[0].nama}`
+      : '-';
 
     const initials = c.nama.split(' ').map(n => n[0]).slice(0, 2).join('');
 
-    const card = document.createElement('div');
-    card.className = 'bg-white p-5 rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition space-y-4';
-    card.innerHTML = `
-      <!-- Row 1: Candidate Identity, Unified Badge & HRD Outcome -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-        <div class="flex items-center space-x-3.5 min-w-0">
-          <div class="w-10 h-10 rounded-xl bg-blue-900 text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-2xs">
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-slate-50/70 transition';
+    tr.innerHTML = `
+      <td class="py-3 px-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-xl bg-blue-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
             ${initials}
           </div>
           <div class="min-w-0">
-            <div class="flex flex-wrap items-center gap-2">
-              <button onclick="openCandidateDetail(${c.id})" class="text-slate-900 text-sm sm:text-base font-bold hover:text-blue-900 hover:underline cursor-pointer transition text-left truncate">
-                ${c.nama}
-              </button>
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-900 border border-blue-200 whitespace-nowrap shrink-0">
-                Tahap II &bull; Lolos HRD
-              </span>
-            </div>
-            <p class="text-xs text-slate-500 font-medium truncate mt-0.5">
-              ${c.posisi} &bull; Mitra Rekanan: <strong class="text-slate-800 font-bold">${c.mitra}</strong>
-            </p>
+            <button onclick="openCandidateDetail(${c.id})" class="text-slate-900 font-bold hover:text-blue-900 hover:underline cursor-pointer transition text-left block truncate">
+              ${c.nama}
+            </button>
+            <span class="text-[11px] text-slate-400 block">${c.domisili} (${c.usia} Thn)</span>
           </div>
         </div>
-
-        <div class="shrink-0 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 text-left sm:text-right">
-          <span class="text-[9px] font-bold text-emerald-800 block uppercase tracking-wider">Hasil Wawancara HRD</span>
-          <strong class="text-xs font-bold text-emerald-900 whitespace-nowrap">&check; ${c.statusHRD}</strong>
-        </div>
-      </div>
-
-      <!-- Row 2: 3-Column Structured Information Strip -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3.5 bg-slate-50/80 rounded-xl border border-slate-100 text-xs">
-        <div class="space-y-1">
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kualifikasi Pendidikan</span>
-          <p class="font-semibold text-slate-800 text-xs">${c.pendidikan}</p>
-          <p class="text-[11px] text-slate-500 break-words">${c.kampus}</p>
-        </div>
-
-        <div class="space-y-1">
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-            </svg>
-            <span>Pengalaman Kerja</span>
-          </span>
-          <p class="font-semibold text-slate-800 text-xs truncate" title="${topExp}">${topExp}</p>
-          <p class="text-[11px] text-slate-500">Riwayat Terverifikasi Glints</p>
-        </div>
-
-        <div class="space-y-1">
-          <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <circle cx="12" cy="8" r="7"/>
-              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
-            </svg>
-            <span>Sertifikasi Kompetensi</span>
-          </span>
-          <p class="font-semibold text-emerald-800 text-xs truncate" title="${topCert}">${topCert}</p>
-          <p class="text-[11px] text-slate-500">Berkas Terlampir</p>
-        </div>
-      </div>
-
-      <!-- Row 3: Notes (if any) -->
-      ${(c.catatan && c.catatan !== '-') ? `
-        <div class="px-3.5 py-2 rounded-xl bg-slate-50/60 border border-slate-100 text-xs text-slate-600 flex items-start gap-2">
-          <span class="text-[11px] font-bold text-slate-500 shrink-0">Catatan HRD:</span>
-          <span class="text-[11px] text-slate-600 italic leading-relaxed">${c.catatan}</span>
-        </div>
-      ` : ''}
-
-      <!-- Row 4: Bottom Action Toolbar -->
-      <div class="pt-2 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-        <span class="text-xs text-slate-400 hidden sm:inline">Paket berkas CV & Lembar Penilaian siap diserahkan ke ${c.mitra}</span>
-        <div class="flex items-center gap-2 self-end sm:self-auto">
-          <button onclick="openCandidateDetail(${c.id})" class="py-2 px-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold flex items-center space-x-1.5 transition cursor-pointer shadow-2xs">
+      </td>
+      <td class="py-3 px-4">
+        <strong class="text-slate-900 block font-semibold">${c.posisi}</strong>
+        <span class="text-[11px] text-slate-500 block truncate">${c.mitra}</span>
+      </td>
+      <td class="py-3 px-4">
+        <div class="font-semibold text-slate-800">${c.pendidikan}</div>
+        <div class="text-[11px] text-slate-500 truncate max-w-[140px]" title="${c.kampus}">${c.kampus}</div>
+      </td>
+      <td class="py-3 px-4">
+        <div class="font-semibold text-slate-800 truncate max-w-[170px]" title="${topExp}">${topExp}</div>
+        <span class="text-[10px] text-slate-400">Glints Verified</span>
+      </td>
+      <td class="py-3 px-4">
+        <div class="font-medium text-emerald-800 text-[11px] truncate max-w-[160px]" title="${topCert}">${topCert}</div>
+      </td>
+      <td class="py-3 px-4 text-center">
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 whitespace-nowrap">
+          &check; ${c.statusHRD}
+        </span>
+        ${(c.catatan && c.catatan !== '-') ? `<span class="block text-[10px] text-slate-500 italic mt-0.5 truncate max-w-[130px] mx-auto" title="${c.catatan}">${c.catatan}</span>` : ''}
+      </td>
+      <td class="py-3 px-4 text-right">
+        <div class="flex items-center justify-end space-x-1.5">
+          <button onclick="openCandidateDetail(${c.id})" title="Lihat Profil & CV Lengkap"
+            class="px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center space-x-1 transition cursor-pointer shadow-2xs">
             <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
               <polyline points="14 2 14 8 20 8" />
             </svg>
-            <span>Lihat CV Lengkap</span>
+            <span class="hidden xl:inline">Lihat CV</span>
           </button>
-          <button onclick="sendCvToMitra(${c.id})" class="py-2 px-4 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-bold flex items-center space-x-1.5 transition cursor-pointer shadow-xs">
+          <button onclick="sendCvToMitra(${c.id})" title="Kirim Berkas CV ke Mitra"
+            class="px-3 py-1.5 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl text-xs transition cursor-pointer flex items-center space-x-1 shadow-xs active:scale-[0.98]">
             <svg class="w-3.5 h-3.5 text-blue-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8"/>
               <polyline points="15 16 19 20 23 16"/>
@@ -606,9 +576,9 @@ function renderThirdPartyGrid() {
             <span>Kirim ke Mitra</span>
           </button>
         </div>
-      </div>
+      </td>
     `;
-    container.appendChild(card);
+    tbody.appendChild(tr);
   });
 
   // Render Pagination Bar for Third Party CVs
@@ -618,7 +588,6 @@ function renderThirdPartyGrid() {
       totalItems: qualified.length,
       currentPage: thirdPartyPage,
       pageSize: thirdPartyPageSize,
-      pageSizeOptions: [3, 5, 10, 20],
       onPageChange: 'changeThirdPartyPage',
       onPageSizeChange: 'changeThirdPartyPageSize',
       itemLabel: 'kandidat lolos HRD'

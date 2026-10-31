@@ -1,66 +1,66 @@
 <!-- TAB 4: REKAPITULASI DUA TAHAP & PENILAIAN -->
-      <!-- ============================================================== -->
-      <section id="tab-rekapitulasi" class="hidden space-y-6">
+<!-- ============================================================== -->
+<section id="tab-rekapitulasi" class="hidden space-y-6">
 
-        <!-- Recapitulation Tab Switcher (Tahap I vs Tahap II) -->
-        <div
-          class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-          <div>
-            <h2 class="text-base font-bold text-slate-900">Pusat Rekapitulasi Data Seleksi Terpadu</h2>
-            <p class="text-xs text-slate-500">Mencegah manipulasi manual antar-tahap pada lembar kerja Excel tunggal</p>
-          </div>
+  <!-- Recapitulation Tab Switcher (Tahap I vs Tahap II) -->
+  <div
+    class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+    <div>
+      <h2 class="text-base font-bold text-slate-900">Pusat Rekapitulasi Data Seleksi Terpadu</h2>
+      <p class="text-xs text-slate-500">Mencegah manipulasi manual antar-tahap pada lembar kerja Excel tunggal</p>
+    </div>
 
-          <!-- Phase Switcher Pills -->
-          <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-semibold">
-            <button onclick="setRekapPhase('tahap1')" id="btn-rekap-tahap1"
-              class="px-3.5 py-1.5 rounded-lg bg-blue-900 text-white font-bold shadow-xs transition cursor-pointer flex items-center space-x-1.5">
-              <span>Rekapitulasi Tahap I (Pra-Wawancara)</span>
-            </button>
-            <button onclick="setRekapPhase('tahap2')" id="btn-rekap-tahap2"
-              class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer flex items-center space-x-1.5">
-              <span>Rekapitulasi Tahap II (Pasca-Wawancara)</span>
-            </button>
-          </div>
-        </div>
+    <!-- Phase Switcher Pills -->
+    <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-semibold">
+      <button onclick="setRekapPhase('tahap1')" id="btn-rekap-tahap1"
+        class="px-3.5 py-1.5 rounded-lg bg-blue-900 text-white font-bold shadow-xs transition cursor-pointer flex items-center space-x-1.5">
+        <span>Rekapitulasi Tahap I</span>
+      </button>
+      <button onclick="setRekapPhase('tahap2')" id="btn-rekap-tahap2"
+        class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer flex items-center space-x-1.5">
+        <span>Rekapitulasi Tahap II</span>
+      </button>
+    </div>
+  </div>
 
-        <!-- Rekapitulasi Table -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-          <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-            <div>
-              <span id="rekap-title-lbl" class="text-xs font-bold text-slate-800">Daftar Rekapitulasi Tahap I (Lolos
-                Sortir Berkas)</span>
-              <p id="rekap-desc-lbl" class="text-[11px] text-slate-500">Kandidat yang memenuhi kualifikasi lowongan dan
-                siap dihubungi untuk wawancara</p>
-            </div>
-            <button onclick="exportRekapExcel()"
-              class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 cursor-pointer">
-              <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" x2="12" y1="15" y2="3" />
-              </svg>
-              <span>Ekspor Rekapitulasi (.xlsx)</span>
-            </button>
-          </div>
+  <!-- Rekapitulasi Table -->
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+    <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+      <div>
+        <span id="rekap-title-lbl" class="text-xs font-bold text-slate-800">Daftar Rekapitulasi Tahap I (Lolos
+          Sortir Berkas)</span>
+        <p id="rekap-desc-lbl" class="text-[11px] text-slate-500">Kandidat yang memenuhi kualifikasi lowongan dan
+          siap dihubungi untuk wawancara</p>
+      </div>
+      <button onclick="exportRekapExcel()"
+        class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 cursor-pointer">
+        <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" stroke-width="2"
+          viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" x2="12" y1="15" y2="3" />
+        </svg>
+        <span>Ekspor Rekapitulasi (.xlsx)</span>
+      </button>
+    </div>
 
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs" id="table-rekapitulasi">
-              <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-bold" id="rekap-thead">
-                <!-- Dynamically set by setRekapPhase -->
-              </thead>
-              <tbody class="divide-y divide-slate-100" id="rekap-tbody">
-                <!-- Dynamically populated -->
-              </tbody>
-            </table>
-          </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs" id="table-rekapitulasi">
+        <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-bold" id="rekap-thead">
+          <!-- Dynamically set by setRekapPhase -->
+        </thead>
+        <tbody class="divide-y divide-slate-100" id="rekap-tbody">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
 
-          <!-- Pagination Bar for Rekapitulasi Table -->
-          <div id="rekapitulasi-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
-            <!-- Populated dynamically via renderPaginationBar() -->
-          </div>
-        </div>
+    <!-- Pagination Bar for Rekapitulasi Table -->
+    <div id="rekapitulasi-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
+      <!-- Populated dynamically via renderPaginationBar() -->
+    </div>
+  </div>
 
-      </section>
+</section>
 
-      <!-- ============================================================== -->
+<!-- ============================================================== -->

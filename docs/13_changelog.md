@@ -5,6 +5,57 @@
 
 ---
 
+## [2.12.0] - 2026-10-31
+### Modal Konfirmasi Sortir, Pembatalan Status Siap Interview, Redesain Tabel Penyerahan & Penjadwalan Wawancara Fleksibel
+Pembaruan berfokus pada penyempurnaan alur kerja seleksi pelamar, pencegahan kesalahan operasional recruiter (*human error*) melalui dialog konfirmasi, kemampuan membatalkan status lolos (*revert to initial*), transformasi tampilan kandidat siap penyerahan menjadi tabel terstruktur, serta penambahan kontrol tanggal dan jam wawancara presisi.
+
+### Added (Fitur Baru & Dialog Konfirmasi)
+* **Filter Status Operasional Wawancara (*Operational Tab Filter* di `public/components/tab-interview.html` & `public/js/interview.js`)**:
+  - Penambahan *segmented control* 3 mode status kerja di bagian atas antarmuka Wawancara:
+    1. **Antrean Aktif (Perlu Tindakan)** *(Default)*: Hanya menampilkan kandidat yang `Lolos Sortir` dan status evaluasi HRD-nya masih `Menunggu Seleksi` (belum diserahkan ke mitra). Kandidat baru yang baru lolos Tahap I akan langsung tampil di sini secara terisolasi tanpa tercampur kandidat lama.
+    2. **Selesai Wawancara**: Menampung seluruh kandidat yang telah memiliki keputusan wawancara (`Lolos Seleksi HRD` / `Tidak Lolos`) atau yang telah diserahkan berkasnya ke mitra (`Diserahkan ke Mitra`).
+    3. **Semua Riwayat**: Menampilkan seluruh riwayat kandidat lolos sortir berkas dari awal siklus.
+  - Setiap tab dilengkapi badge angka counter kandidat *real-time*.
+  - Perubahan keputusan wawancara HRD secara dinamis memindahkan kandidat dari tab antrean aktif ke tab selesai tanpa me-reload halaman.
+* **Modal Konfirmasi Status Sortir (`#modal-confirm-sortir` di `public/components/modals.html` & `public/js/pelamar.js`)**:
+  - Tombol **Loloskan** kini membuka modal dialog konfirmasi yang memuat nama kandidat, posisi dilamar, dan mitra rekanan sebelum status diubah.
+  - Mencegah perubahan status tidak disengaja ke status **Siap Interview**.
+* **Fitur Pembatalan Lolos Sortir (*Revert to Belum Disortir*)**:
+  - Kandidat yang telah berstatus **Siap Interview** kini memiliki tombol aksi **Batalkan** pada baris tabel pelamar dan footer modal detail CV.
+  - Konfirmasi pembatalan otomatis mengembalikan status `status_sortir` ke `Belum Disortir`, `status_interview` ke `Belum Dihubungi`, jadwal ke `-`, dan `status_hrd` ke `Menunggu Seleksi`.
+  - Penambahan tombol toolbar **Batalkan Sortir** untuk seleksi jamak (*bulk cancel*).
+* **Transformasi Tabel Penyerahan Kandidat Terpilih (`public/components/tab-penyerahan.html` & `public/js/penyerahan.js`)**:
+  - Sub-view **Daftar Kandidat Terpilih Siap Penyerahan** diubah dari format *card* vertikal menjadi tabel terstruktur responsif (`#thirdparty-tbody`).
+  - Kolom tabel mencakup: Kandidat (avatar inisial, nama, kontak), Posisi & Mitra Rekanan, Pendidikan, Pengalaman Kerja, Sertifikasi, Status HRD, dan Aksi Penyerahan (Lihat CV & Kirim ke Mitra).
+* **Modal Pengaturan Tanggal & Jam Wawancara Presisi (`#modal-schedule`)**:
+  - Kontrol pemilih tanggal (`input type="date"`) dan jam (`input type="time"`) untuk wawancara kandidat.
+  - Fitur **Atur Jadwal Serentak** dengan opsi centang penerapannya ke seluruh kandidat aktif.
+  - Endpoint baru `PUT /api/v1/candidates/bulk/interview-schedule` pada [`communicationRoutes.js`](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/kam-recruit/src/routes/communicationRoutes.js).
+* **Standardisasi Opsi Baris Paginasi Universal**:
+  - Konstanta terpusat `DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50]` di `public/js/app.js` digunakan bersama di semua modul tabel.
+* **Perilaku Non-Strict Modal Dismiss (Klik Luar & Tombol Escape)**:
+  - Seluruh modal dialog kini dapat ditutup secara instan dengan mengklik area latar belakang (*backdrop*) di luar jendela modal (`onclick="if (event.target === this) closeModal(...)"`).
+  - Penambahan listener global delegasi klik dan tombol `Escape` keyboard pada `public/js/app.js` (`setupModalBackdropDismiss()`).
+
+### Changed (Penyelarasan Desain & Pembersihan Elemen)
+* **Standardisasi Tampilan Kolom Pengalaman Kerja (`public/js/pelamar.js`)**:
+  - Menyelaraskan format pengalaman kerja kandidat nomor 20 (Nabila Putri) menjadi **"Field Direct Sales Promotor"** dengan subteks durasi **"2 tahun (2024 - 2026)"** agar seragam dengan pola tampilan kandidat lainnya dan tidak terpotong (*overflow truncate*).
+* **Penyederhanaan Header Modal Penilaian HRD (`#modal-scoring` di `public/components/modals.html`)**:
+  - Menghapus tombol pintasan tautan *"Lihat Berkas CV Pelamar"* pada header modal keputusan wawancara agar tampilan modal tetap fokus, bersih, dan ringkas.
+* **Pembersihan Kolom Tabel Rekapitulasi Tahap I (`public/js/rekapitulasi.js`)**:
+  - Menghapus kolom **Log Terakhir Master Data** dari tabel Rekapitulasi Tahap I.
+  - Memperbarui `colspan` state kosong (*empty state*) menjadi 5 kolom agar selaras dengan tabel.
+* **Penyelarasan Banner Header Antarmuka**:
+  - Banner header pada `tab-dashboard.html` dan `tab-penyerahan.html` diselaraskan mengikuti tata letak dan tipografi `tab-pelamar.html` (`text-base font-bold`, subjudul `text-xs text-slate-500`).
+  - Tombol aksi pada banner penyerahan diposisikan rapi di bawah teks deskripsi.
+* **Pembersihan Elemen Berlebih**:
+  - Menghapus kolom redundan `Tgl Daftar (Glints)` dan `Status Seleksi I` pada tabel pelamar.
+  - Menghapus kartu KPI tidak simetris *Bulan Rekrutmen Tertinggi* pada dashboard dan merapikan grid menjadi 3 kolom operasional.
+  - Menghapus kartu badge peran pada sidebar dan bilah unduh berkas asli pada modal CV.
+* **Verifikasi Sistem**: Seluruh 10 test suite Jest (24 skenario uji) lulus 100%.
+
+---
+
 ## [2.11.0] - 2026-10-31
 ### Refaktorisasi Arsitektur MVC Murni & Pembentukan Lapisan Model (`src/models/`)
 Pembaruan berfokus pada refaktorisasi arsitektur backend secara menyeluruh untuk menerapkan pemisahan tanggung jawab (*Separation of Concerns*) berbasis pola MVC murni. Seluruh kueri SQL mentah yang sebelumnya berada di dalam Controller telah dipindahkan ke kelas-kelas Model mandiri yang terstruktur rapi.
@@ -30,7 +81,7 @@ Pembaruan berfokus pada refaktorisasi arsitektur backend secara menyeluruh untuk
 
 ## [2.10.0] - 2026-10-31
 ### Paginasi Tabel Rekapitulasi Dua Tahap (Tahap I & Tahap II)
-Pembaruan berfokus pada penambahan fungsionalitas paginasi terpadu pada tabel Pusat Rekapitulasi Data Seleksi Terpadu (`#table-rekapitulasi`) pada tab Rekapitulasi. Paginasi mendukung pengaturan baris fleksibel (5, 10, 25, 50 baris per halaman) untuk memudahkan tinjauan kandidat pada Rekapitulasi Tahap I (Pra-Wawancara) maupun Tahap II (Pasca-Wawancara).
+Pembaruan berfokus pada penambahan fungsionalitas paginasi terpadu pada tabel Pusat Rekapitulasi Data Seleksi Terpadu (`#table-rekapitulasi`) pada tab Rekapitulasi. Paginasi mendukung pengaturan baris fleksibel (5, 10, 25, 50 baris per halaman) untuk memudahkan tinjauan kandidat pada Rekapitulasi Tahap I maupun Tahap II (Pasca-Wawancara).
 
 ### Added (Fitur Paginasi Rekapitulasi)
 * **Paginasi Tabel Rekapitulasi (`public/components/tab-rekapitulasi.html` & `public/js/rekapitulasi.js`)**:
@@ -125,7 +176,7 @@ Pembaruan berfokus pada implementasi komponen paginasi universal berstandar Appl
   - Penanganan status kosong (*Empty State*): Bilah paginasi otomatis disembunyikan jika total data adalah 0 atau jika seluruh tabel kosong.
 
 ### Changed (Implementasi Paginasi pada 4 Modul Utama)
-* **1. Bank Data Pelamar (Kanal Glints & Internal) (`tab-pelamar.html` & `public/js/pelamar.js`)**:
+* **1. Master Data Pelamar  (`tab-pelamar.html` & `public/js/pelamar.js`)**:
   - Kontainer paginasi `#pelamar-pagination` ditambahkan di bawah tabel master kandidat.
   - Default ukuran halaman: 8 kandidat per halaman.
   - Reset otomatis halaman ke halaman 1 saat staf melakukan pencarian teks atau mengubah filter status seleksi/posisi.
@@ -217,7 +268,7 @@ Pembaruan berfokus pada refaktorisasi arsitektur frontend: memecah berkas monoli
   - `sidebar.html`: Navigasi samping desktop, kartu kuota mitra, dan ringkasan lowongan aktif.
   - `mobile-nav.html`: Bilah navigasi melayang bawah khusus mobile (*Dock Floating Tab Bar*).
   - `tab-dashboard.html`: Hero banner, 4 KPI cards, grafik bulanan Jan&ndash;Des, dan tabel lowongan.
-  - `tab-pelamar.html`: Toolbar pencarian/filter dan tabel bank data pelamar.
+  - `tab-pelamar.html`: Toolbar pencarian/filter dan tabel Master Data Pelamar.
   - `tab-interview.html`: Daftar pelamar lolos sortir dan panel pratinjau pesan otomatis WhatsApp.
   - `tab-rekapitulasi.html`: Tampilan rekapitulasi dua tahap (Tahap I & Tahap II) beserta tombol ekspor CSV/Excel.
   - `tab-penyerahan.html`: Kartu kandidat lolos HRD siap diserahkan ke mitra (1 kolom vertikal).
@@ -271,7 +322,7 @@ Pembaruan berfokus pada resolusi kendala tampilan terlipat (*crushed layout*) pa
   - **Pembersihan Badge Redundan**: Menghapus lencana `PT KAM Official` pada panel pratinjau pesan otomatis WhatsApp.
 * **Desain Ulang Kartu Kandidat Terpilih Tab 5 (Kirim CV ke Mitra)**:
   - **Eliminasi Teks Terlipat pada Header**: Menyatukan lencana status menjadi `Tahap II &bull; Lolos HRD` dalam satu kapsul kohesif, meniadakan pemisahan `• Tahap II` yang sebelumnya terhimpit menjadi 3 baris vertikal di sebelah kotak `Hasil Wawancara`.
-  - **Pemisahan Kualifikasi Pendidikan**: Menata baris `Kualifikasi:` dengan `shrink-0` dan nilai kampus/jurusan dengan `break-words flex-1 min-w-0` sehingga nama institusi yang panjang tidak menabrak label.
+  - **Pemisahan Pendidikan**: Menata baris `Kualifikasi:` dengan `shrink-0` dan nilai kampus/jurusan dengan `break-words flex-1 min-w-0` sehingga nama institusi yang panjang tidak menabrak label.
   - **Penggantian Emoji Font ke Vektor SVG**: Mengganti emoji raw (`💼`, `📜`) dengan ikon vektor SVG kustom beresolusi tinggi (*Briefcase* dan *Award Certificate*).
   - **Penataan Responsivitas Grid**: Mengubah breakpoint grid menjadi `grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5`, memberikan ruang lapang (~390px) pada resolusi laptop standar desktop (1024-1366px).
 
@@ -376,7 +427,7 @@ Rilis penuh versi 1.0.0 menandai penyelesaian prototipe sistem operasional manaj
 ## [0.2.1] - 2026-10-30
 ### Fixed
 * Perbaikan pembengkokan teks pada kartu KPI (mengatasi masalah badge `+12 Hari Ini` dan `40% Respons` yang sempat terlipat menjadi 2–3 baris).
-* Penggantian tombol berpanah teks `Kelola Pelamar →` menjadi tombol sekunder bergaya Apple HIG yang profesional `Buka Bank Pelamar`.
+* Penggantian tombol berpanah teks `Kelola Pelamar →` menjadi tombol sekunder bergaya Apple HIG yang profesional `Data Pelamar`.
 
 ---
 

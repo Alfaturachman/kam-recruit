@@ -22,10 +22,6 @@ async function fetchDashboardMetrics() {
 
       const partnerEl = document.getElementById('kpi-partner-val');
       if (partnerEl) partnerEl.innerHTML = `${d.totalReadyPartner} <span class="text-xs font-medium text-slate-400">Kandidat</span>`;
-
-      // Update Sidebar Quota
-      const quotaLbl = document.getElementById('kpi-quota-lbl');
-      if (quotaLbl) quotaLbl.textContent = `${d.quotaFilled} / ${d.quotaTarget} Posisi`;
     }
   } catch (e) {
     console.warn('Gagal memuat metrik real-time:', e);
@@ -85,29 +81,26 @@ function renderVacanciesTable(items) {
 
   pageItems.forEach(v => {
     const pct = v.quota > 0 ? Math.round((v.passed_hrd / v.quota) * 100) : 0;
+    const location = v.work_location || v.target_city;
+    const locationText = location ? `, ${location}` : '';
     const tr = document.createElement('tr');
     tr.className = 'hover:bg-slate-50/80 transition';
     tr.innerHTML = `
       <td class="p-3">
         <strong class="text-slate-900 block font-bold text-xs sm:text-sm">${v.position_title}</strong>
-        <span class="text-[11px] text-slate-500">${v.partner_name} &bull; ${v.work_location || v.target_city}</span>
+        <span class="text-[11px] text-slate-500">${v.partner_name}${locationText}</span>
       </td>
-      <td class="p-3 font-semibold text-slate-700 font-mono">${v.quota} Posisi</td>
-      <td class="p-3 font-bold text-blue-900 font-mono">${v.total_applicants} Pelamar</td>
-      <td class="p-3 font-semibold text-slate-700 font-mono">${v.passed_sortir} Lolos</td>
+      <td class="p-3 font-semibold text-slate-700">${v.quota} Posisi</td>
+      <td class="p-3 font-bold text-blue-900">${v.total_applicants} Pelamar</td>
+      <td class="p-3 font-semibold text-slate-700">${v.passed_sortir} Lolos</td>
       <td class="p-3">
         <div class="flex items-center space-x-2">
-          <span class="font-bold text-emerald-700 font-mono">${v.passed_hrd}</span>
+          <span class="font-bold text-emerald-700">${v.passed_hrd}</span>
           <div class="w-16 bg-slate-200 h-1.5 rounded-full overflow-hidden">
             <div class="bg-emerald-600 h-full" style="width: ${Math.min(100, pct)}%"></div>
           </div>
-          <span class="text-[10px] text-slate-400 font-mono">${pct}%</span>
+          <span class="text-[10px] text-slate-400">${pct}%</span>
         </div>
-      </td>
-      <td class="p-3">
-        <button onclick="filterByPosisi('${v.position_title}')" class="px-2.5 py-1 bg-blue-50 text-blue-900 border border-blue-200 hover:bg-blue-900 hover:text-white rounded-lg text-xs font-bold transition cursor-pointer">
-          Saring Pelamar
-        </button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -120,7 +113,6 @@ function renderVacanciesTable(items) {
       totalItems: list.length,
       currentPage: dashboardVacanciesPage,
       pageSize: dashboardVacanciesPageSize,
-      pageSizeOptions: [3, 5, 10],
       onPageChange: 'changeDashboardVacanciesPage',
       onPageSizeChange: 'changeDashboardVacanciesPageSize',
       itemLabel: 'lowongan'
@@ -186,8 +178,6 @@ async function loadMonthlyRecruitmentChart(year = currentChartYear) {
     if (sumDiterima) sumDiterima.textContent = json.summary.totalDiterima;
     const sumRate = document.getElementById('sum-rate-val');
     if (sumRate) sumRate.textContent = json.summary.rataRataPenerimaan;
-    const sumPeak = document.getElementById('sum-peak-val');
-    if (sumPeak) sumPeak.textContent = json.summary.bulanTertinggi;
 
     // Render 12 months dynamic bars
     renderMonthlyBars(json.data, year);
@@ -252,13 +242,13 @@ function updateChartTooltip(m, year) {
   if (tipMonth) tipMonth.textContent = `${m.monthFull} ${year}:`;
   if (tipDetail) {
     if (m.masuk === 0) {
-      tipDetail.innerHTML = `<span class="text-slate-400">Tidak ada pendaftaran berkas masuk pada bulan ini (0 Pelamar)</span>`;
+      tipDetail.innerHTML = `<span class="text-slate-400">Tidak ada pendaftaran berkas pada bulan ini</span>`;
     } else {
-      tipDetail.innerHTML = `<strong>${m.masuk}</strong> Berkas Masuk &bull; <strong class="text-emerald-700">${m.diterima}</strong> Diterima (${m.persentaseDiterima} Lolos Seleksi)`;
+      tipDetail.innerHTML = `<strong>${m.masuk}</strong> Kandidat Masuk, <strong class="text-emerald-700">${m.diterima}</strong> Diterima (${m.persentaseDiterima})`;
     }
   }
   if (tipNote) {
-    tipNote.textContent = m.masuk > 0 ? 'Data Real-time MySQL' : 'Nol Pelamar';
+    tipNote.textContent = '';
   }
 }
 
@@ -279,7 +269,7 @@ function renderMonthlyTable(monthsData) {
           ${m.persentaseDiterima}
         </span>
       </td>
-      <td class="p-3 text-slate-500 text-xs italic">${m.masuk > 0 ? 'Data Tersimpan di Database' : 'Tidak Ada Aktivitas'}</td>
+      <td class="p-3 text-slate-500 text-xs">${m.masuk > 0 ? 'Selesai Direkap' : 'Nihil'}</td>
     `;
     tbody.appendChild(tr);
   });
