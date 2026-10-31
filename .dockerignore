@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+uploads/excels/*
+uploads/cv/*
+!uploads/excels/.gitkeep
+!uploads/cv/.gitkeep
+tests
+docs
+Laporan
+*.md
+*.log
+

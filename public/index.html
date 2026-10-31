@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KAM Recruit - Sistem Manajemen Rekrutmen Outsourcing PT KAM</title>
+  <meta name="description"
+    content="Sistem Manajemen Rekrutmen Tenaga Kerja Outsourcing PT Kinarya Alihdaya Mandiri (PT KAM) berbasis integrasi Glints dan evaluasi wawancara dua tahap.">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    code,
+    pre,
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Apple HIG Smooth Transitions */
+    .apple-glass {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    /* Print Stylesheet for Dossier Pelamar */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #modal-candidate,
+      #modal-candidate * {
+        visibility: visible;
+      }
+
+      #modal-candidate {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: white;
+        padding: 0;
+        margin: 0;
+        z-index: 99999;
+      }
+
+      .modal-dialog-content {
+        max-height: none !important;
+        overflow: visible !important;
+        border: none !important;
+        box-shadow: none !important;
+        width: 100% !important;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 font-sans antialiased text-xs md:text-sm selection:bg-blue-900 selection:text-white">
+
+  <!-- 1. TOP HEADER / APP BAR COMPONENT -->
+  <!-- 1. TOP BAR NAVIGATION -->
+<!-- ============================================================== -->
+<header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+
+    <!-- Brand & Company Identity -->
+    <div class="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
+      <!-- PT KAM Red & Blue Logo Mark -->
+      <div
+        class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-blue-900 via-blue-800 to-red-600 flex items-center justify-center text-white font-extrabold text-xs sm:text-sm tracking-wider shadow-sm shrink-0">
+        KAM
+      </div>
+      <div class="min-w-0">
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+          <h1 class="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight leading-none whitespace-nowrap">
+            KAM RECRUIT</h1>
+        </div>
+        <p class="text-[11px] text-slate-500 font-medium truncate sm:hidden">PT Kinarya Alihdaya Mandiri</p>
+        <p class="text-xs text-slate-500 font-medium mt-0.5 hidden sm:block">Sistem Manajemen Rekrutmen PT Kinarya
+          Alihdaya Mandiri</p>
+      </div>
+    </div>
+
+    <!-- Center / Right Controls -->
+    <div class="flex items-center space-x-2 sm:space-x-4 shrink-0">
+
+      <!-- Live Server Time -->
+      <div
+        class="hidden md:flex items-center space-x-2 px-3 py-1.5 bg-slate-100 rounded-xl text-xs text-slate-600 border border-slate-200/80">
+        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+        <span>Server: <strong id="live-clock" class="text-slate-900 font-mono">14:52:10 WIB</strong></span>
+      </div>
+
+      <!-- HRD Officer Profile -->
+      <div class="flex items-center space-x-2 sm:space-x-3 pl-1.5 sm:pl-2 border-l border-slate-200">
+        <div class="text-right hidden sm:block">
+          <div class="text-xs font-bold text-slate-900">Iing Ariesta Sari, S.Psi.</div>
+          <div class="text-[11px] text-slate-500">HRD Recruitment</div>
+        </div>
+        <div
+          class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-blue-900 to-blue-700 text-white flex items-center justify-center font-bold text-xs shadow-xs border border-blue-950/20 shrink-0">
+          SR
+        </div>
+      </div>
+
+      <!-- Mobile Drawer Toggle -->
+      <button onclick="toggleMobileMenu()"
+        class="lg:hidden p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 focus:outline-none cursor-pointer"
+        aria-label="Toggle navigation menu">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================== -->
+
+  <!-- 2. MAIN APP SHELL -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1 flex flex-col lg:flex-row gap-6">
+
+    <!-- SIDEBAR NAVIGATION COMPONENT -->
+    <aside id="sidebar-nav" class="hidden lg:block lg:static fixed inset-0 z-50 lg:z-auto lg:w-64 shrink-0">
+
+  <!-- Mobile Backdrop Overlay (Click to close drawer) -->
+  <div class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity lg:hidden" onclick="toggleMobileMenu()">
+  </div>
+
+  <!-- Floating Drawer Panel (Mobile) / Static Sidebar (Desktop) -->
+  <div
+    class="relative w-4/5 max-w-xs h-full bg-slate-50 lg:bg-transparent p-4 lg:p-0 overflow-y-auto lg:overflow-visible space-y-4 shadow-2xl lg:shadow-none flex flex-col z-10">
+
+    <!-- Mobile Drawer Header with Close Button -->
+    <div class="flex items-center justify-between pb-2 border-b border-slate-200 lg:hidden">
+      <div class="flex items-center space-x-2">
+        <div
+          class="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-900 to-red-600 flex items-center justify-center text-white font-extrabold text-[10px]">
+          KAM
+        </div>
+        <strong class="text-xs font-bold text-slate-900">Menu Navigasi</strong>
+      </div>
+      <button onclick="toggleMobileMenu()"
+        class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200 cursor-pointer"
+        aria-label="Tutup menu">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Primary Role Badge Card -->
+    <div
+      class="bg-gradient-to-br from-blue-900 via-blue-950 to-slate-900 text-white rounded-2xl p-4 shadow-sm border border-blue-800">
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-blue-200">KAM RECRUIT</span>
+        <span
+          class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-red-600 text-white whitespace-nowrap shrink-0">HRD
+          RECRUITER</span>
+      </div>
+      <h3 class="text-sm font-bold mt-2">Operasional Seleksi</h3>
+      <p class="text-xs text-blue-200/80 mt-0.5">PT Kinarya Alihdaya Mandiri</p>
+      <div class="mt-3 pt-3 border-t border-blue-800/80 flex items-center justify-between text-xs">
+        <span class="text-blue-300">Target Kuota:</span>
+        <span id="kpi-quota-lbl" class="font-bold text-white">-- / -- Posisi</span>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="bg-white rounded-2xl p-2.5 border border-slate-200 shadow-xs space-y-1 text-xs font-semibold">
+      <button onclick="switchTab('dashboard')" id="nav-dashboard"
+        class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition bg-blue-900 text-white shadow-xs text-left cursor-pointer">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect width="7" height="9" x="3" y="3" rx="1" />
+          <rect width="7" height="5" x="14" y="3" rx="1" />
+          <rect width="7" height="9" x="14" y="12" rx="1" />
+          <rect width="7" height="5" x="3" y="16" rx="1" />
+        </svg>
+        <span>Dashboard</span>
+      </button>
+
+      <button onclick="switchTab('pelamar')" id="nav-pelamar"
+        class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition text-slate-600 hover:bg-slate-100 text-left cursor-pointer">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        <span>Data Pelamar (Glints)</span>
+      </button>
+
+      <button onclick="switchTab('interview')" id="nav-interview"
+        class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition text-slate-600 hover:bg-slate-100 text-left cursor-pointer">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect width="18" height="18" x="3" y="4" rx="2" />
+          <line x1="16" x2="16" y1="2" y2="6" />
+          <line x1="8" x2="8" y1="2" y2="6" />
+          <line x1="3" x2="21" y1="10" y2="10" />
+          <path d="m9 16 2 2 4-4" />
+        </svg>
+        <span>Jadwal & Follow-up</span>
+      </button>
+
+      <button onclick="switchTab('rekapitulasi')" id="nav-rekapitulasi"
+        class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition text-slate-600 hover:bg-slate-100 text-left cursor-pointer">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" x2="8" y1="13" y2="13" />
+          <line x1="16" x2="8" y1="17" y2="17" />
+        </svg>
+        <span>Rekapitulasi Dua Tahap</span>
+      </button>
+
+      <button onclick="switchTab('penyerahan')" id="nav-penyerahan"
+        class="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl transition text-slate-600 hover:bg-slate-100 text-left cursor-pointer">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8" />
+          <polyline points="15 16 19 20 23 16" />
+          <line x1="19" y1="10" x2="19" y2="20" />
+        </svg>
+        <span>Master Mitra</span>
+      </button>
+    </nav>
+
+  </div>
+</aside>
+
+    <!-- MAIN VIEW AREA -->
+    <main class="flex-1 space-y-6 pb-24 lg:pb-6">
+
+      <!-- VIEW 1: TAB DASHBOARD -->
+      <!-- TAB 1: DASHBOARD & FUNNEL SELEKSI -->
+      <!-- ============================================================== -->
+      <section id="tab-dashboard" class="space-y-6">
+
+                <!-- Welcome Banner (Apple HIG Clean White Card) -->
+        <div
+          class="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 text-slate-900 border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
+          <div class="space-y-1.5">
+            <div
+              class="inline-flex items-center space-x-1.5 sm:space-x-2 px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
+              <span class="uppercase tracking-wider sm:hidden">Okt – Nov 2026</span>
+              <span class="uppercase tracking-wider hidden sm:inline">Periode Rekrutmen: Oktober – November 2026</span>
+            </div>
+            <h2 class="text-base sm:text-xl md:text-2xl font-bold tracking-tight text-slate-900">Operasional Rekrutmen Outsourcing</h2>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-3xl leading-relaxed sm:hidden">
+              Otomasi seleksi berkas Glints, verifikasi wawancara, dan serah terima CV mitra pihak ketiga.
+            </p>
+            <p class="text-xs sm:text-sm text-slate-500 max-w-3xl leading-relaxed hidden sm:block">
+              Mengotomatisasi penyaringan berkas Glints, eliminasi risiko manipulasi data spreadsheet manual, dan
+              sinkronisasi pelacakan status dua tahap hingga penyerahan CV ke mitra pihak ketiga.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2.5">
+            <button onclick="openImportModal()"
+              class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold rounded-xl text-xs transition border border-slate-200 flex items-center space-x-2 cursor-pointer active:scale-[0.98]">
+              <svg class="w-4 h-4 text-blue-900 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Impor Glints</span>
+            </button>
+            <button onclick="switchTab('penyerahan')"
+              class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-xs transition shadow-xs flex items-center space-x-2 cursor-pointer active:scale-[0.98]">
+              <svg class="w-4 h-4 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="m22 2-7 20-4-9-9-4Z" />
+                <path d="M22 2 11 13" />
+              </svg>
+              <span>Serah Mitra</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Key KPI Metrics Cards (Apple HIG Inset Grouped) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+
+          <!-- KPI 1: Total Pelamar Masuk -->
+          <div
+            class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+              <div class="space-y-1">
+                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Lamaran
+                  (Glints)</span>
+                <div id="kpi-total-val" class="text-3xl font-extrabold text-slate-900 tracking-tight">-- <span
+                    class="text-xs font-medium text-slate-400">Kandidat</span></div>
+              </div>
+              <div
+                class="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-900">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                </svg>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
+              <span class="text-[11px] text-slate-500 truncate min-w-0 flex-1">3 Lowongan Mitra</span>
+              <span
+                class="inline-flex items-center space-x-1 text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-0.5 rounded-full text-[10px] border border-emerald-200/60 whitespace-nowrap shrink-0">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                <span>+12 Hari Ini</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- KPI 2: Lolos Sortir (Tahap I) -->
+          <div
+            class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+              <div class="space-y-1">
+                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Lolos Sortir
+                  Kualifikasi</span>
+                <div id="kpi-sortir-val" class="text-3xl font-extrabold text-blue-950 tracking-tight">-- <span
+                    class="text-xs font-medium text-slate-400">Orang</span></div>
+              </div>
+              <div
+                class="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <polyline points="9 11 12 14 22 4" />
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                </svg>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
+              <span class="text-[11px] text-slate-500 truncate min-w-0 flex-1">Rekap Tahap I</span>
+              <span id="kpi-sortir-pct"
+                class="inline-flex items-center text-blue-900 font-semibold bg-blue-50 px-2.5 py-0.5 rounded-full text-[10px] border border-blue-200/60 whitespace-nowrap shrink-0">
+                --% Lolos
+              </span>
+            </div>
+          </div>
+
+          <!-- KPI 3: Konfirmasi Hadir Interview (Riil 20 / 50) -->
+          <div
+            class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+              <div class="space-y-1">
+                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Konfirmasi Hadir
+                  Interview</span>
+                <div id="kpi-wa-val" class="text-3xl font-extrabold text-amber-950 tracking-tight">-- <span
+                    class="text-xs font-medium text-slate-400">/ -- Hadir</span></div>
+              </div>
+              <div
+                class="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
+              <span id="kpi-wa-drop-lbl" class="text-[11px] text-slate-500 truncate min-w-0 flex-1">-- Drop / No Respon</span>
+              <span id="kpi-wa-pct"
+                class="inline-flex items-center text-amber-800 font-semibold bg-amber-50 px-2.5 py-0.5 rounded-full text-[10px] border border-amber-200/60 whitespace-nowrap shrink-0">
+                --% Respons
+              </span>
+            </div>
+          </div>
+
+          <!-- KPI 4: Siap Kirim ke Mitra (Tahap II) -->
+          <div
+            class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-md transition">
+            <div class="flex justify-between items-start">
+              <div class="space-y-1">
+                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Lolos HRD & Siap
+                  Serah</span>
+                <div id="kpi-partner-val" class="text-3xl font-extrabold text-red-600 tracking-tight">-- <span
+                    class="text-xs font-medium text-slate-400">Kandidat</span></div>
+              </div>
+              <div
+                class="w-10 h-10 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-red-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
+              <span class="text-[11px] text-slate-500 truncate min-w-0 flex-1">Rekap Tahap II</span>
+              <span
+                class="inline-flex items-center text-red-700 font-semibold bg-red-50 px-2.5 py-0.5 rounded-full text-[10px] border border-red-200/60 whitespace-nowrap shrink-0">
+                Siap ke Mitra
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        
+        <!-- ============================================================== -->
+        <!-- RECRUITMENT MONTHLY RECAPITULATION CHART (JAN - DEC) -->
+        <!-- ============================================================== -->
+        <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
+          <!-- Chart Header & Controls -->
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-2 border-b border-slate-100">
+            <div>
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-900 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight">Grafik Rekapitulasi Rekrutmen Bulanan</h3>
+                  <p class="text-xs text-slate-500">Perbandingan jumlah kandidat masuk (Glints) vs kandidat diterima per bulan (Jan &ndash; Des)</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5 self-end sm:self-auto">
+              <!-- Year Selector Dropdown -->
+              <div class="flex items-center space-x-1.5 bg-slate-100 px-2.5 py-1.5 rounded-xl border border-slate-200">
+                <span class="text-[11px] font-semibold text-slate-500">Tahun:</span>
+                <select id="monthly-chart-year" onchange="loadMonthlyRecruitmentChart(this.value)"
+                  class="bg-transparent text-xs font-bold text-blue-950 focus:outline-hidden cursor-pointer">
+                  <option value="2026" selected>2026</option>
+                  <option value="2025">2025</option>
+                </select>
+              </div>
+
+              <!-- View Switcher (Chart vs Table) -->
+              <div class="flex p-0.5 bg-slate-100 rounded-xl text-xs font-medium border border-slate-200">
+                <button type="button" onclick="toggleChartView('chart')" id="btn-view-chart"
+                  class="px-2.5 py-1 rounded-lg bg-white text-blue-900 font-bold shadow-2xs transition cursor-pointer">Grafik</button>
+                <button type="button" onclick="toggleChartView('table')" id="btn-view-table"
+                  class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">Tabel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary KPI Strip for Selected Year -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="p-3 rounded-xl bg-blue-50/60 border border-blue-100">
+              <span class="text-[10px] font-bold text-blue-800 uppercase tracking-wider block">Total Berkas Masuk</span>
+              <div class="flex items-baseline space-x-1 mt-0.5">
+                <strong id="sum-masuk-val" class="text-lg font-bold text-blue-950">--</strong>
+                <span class="text-[11px] text-blue-700 font-medium">Kandidat</span>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-emerald-50/60 border border-emerald-100">
+              <span class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider block">Total Diterima (Lolos HRD)</span>
+              <div class="flex items-baseline space-x-1 mt-0.5">
+                <strong id="sum-diterima-val" class="text-lg font-bold text-emerald-950">--</strong>
+                <span class="text-[11px] text-emerald-700 font-medium">Kandidat</span>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Rata-Rata Diterima</span>
+              <div class="flex items-baseline space-x-1 mt-0.5">
+                <strong id="sum-rate-val" class="text-lg font-bold text-slate-800">--%</strong>
+                <span class="text-[10px] text-slate-500">Tingkat Lolos</span>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Bulan Rekrutmen Tertinggi</span>
+              <div class="flex items-baseline space-x-1 mt-0.5">
+                <strong id="sum-peak-val" class="text-xs sm:text-sm font-bold text-slate-800 truncate">--</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs pt-1">
+            <div class="flex items-center space-x-4">
+              <div class="flex items-center space-x-2">
+                <span class="w-3.5 h-3.5 rounded-sm bg-blue-900 inline-block shadow-2xs"></span>
+                <span class="text-slate-700 font-semibold text-[11px]">Kandidat Masuk (Glints)</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="w-3.5 h-3.5 rounded-sm bg-emerald-600 inline-block shadow-2xs"></span>
+                <span class="text-slate-700 font-semibold text-[11px]">Diterima / Lolos HRD</span>
+              </div>
+            </div>
+            <span class="text-[11px] text-slate-400 italic hidden md:inline">Arahkan kursor atau sentuh batang untuk melihat detail per bulan</span>
+          </div>
+
+          <!-- Chart Visual Container (Pure Responsive HTML5/CSS Bars) -->
+          <div id="chart-view-container" class="space-y-2">
+            <div class="relative bg-slate-50/70 p-4 rounded-2xl border border-slate-100">
+              <!-- Y-Axis Grid Guidelines -->
+              <div class="absolute inset-x-4 top-4 bottom-10 flex flex-col justify-between pointer-events-none opacity-40">
+                <div class="border-b border-dashed border-slate-300 w-full"></div>
+                <div class="border-b border-dashed border-slate-300 w-full"></div>
+                <div class="border-b border-dashed border-slate-300 w-full"></div>
+                <div class="border-b border-slate-200 w-full"></div>
+              </div>
+
+              <!-- 12 Monthly Bar Columns Grid -->
+              <div class="relative z-10 grid grid-cols-12 gap-1 sm:gap-2.5 h-64 items-end pt-4 pb-2" id="monthly-bars-grid">
+                <!-- Dynamically populated via renderMonthlyBars() -->
+              </div>
+            </div>
+
+            <!-- Hover Detail Info Box -->
+            <div id="chart-tooltip-bar" class="p-2.5 rounded-xl bg-blue-50/70 border border-blue-200/80 text-xs flex flex-wrap items-center justify-between gap-2 text-slate-700">
+              <div class="flex items-center space-x-2">
+                <strong id="tip-month-name" class="text-blue-950 font-bold">Oktober 2026:</strong>
+                <span id="tip-detail-text" class="text-slate-600">128 Berkas Masuk &bull; 32 Diterima (25% Lolos)</span>
+              </div>
+              <span id="tip-note-text" class="text-[11px] text-blue-900 font-medium italic">Operasional Berjalan</span>
+            </div>
+          </div>
+
+          <!-- Alternative Table View Container (Hidden by default) -->
+          <div id="table-view-container" class="hidden overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-bold">
+                <tr>
+                  <th class="p-3 rounded-l-xl">Bulan</th>
+                  <th class="p-3 text-center">Kandidat Masuk</th>
+                  <th class="p-3 text-center">Diterima / Lolos</th>
+                  <th class="p-3 text-center">Tingkat Penerimaan</th>
+                  <th class="p-3 rounded-r-xl">Catatan Rekrutmen</th>
+                </tr>
+              </thead>
+              <tbody id="monthly-table-tbody" class="divide-y divide-slate-100">
+                <!-- Populated dynamically via renderMonthlyTable() -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Lowongan Table Status (Full Width Table) -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Daftar Lowongan Kerja Sama Outsourcing</h3>
+              <p class="text-xs text-slate-500 hidden sm:block">Alokasi kuota kebutuhan dan pelacakan kandidat aktif per posisi mitra</p>
+            </div>
+            <button onclick="switchTab('pelamar')"
+              class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition border border-slate-200/80 cursor-pointer active:scale-[0.98]">
+              Buka Bank Pelamar
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-bold">
+                <tr>
+                  <th class="p-3 rounded-l-xl">Posisi & Mitra</th>
+                  <th class="p-3">Kebutuhan</th>
+                  <th class="p-3">Pelamar Glints</th>
+                  <th class="p-3">Lolos Sortir</th>
+                  <th class="p-3">Lolos HRD</th>
+                  <th class="p-3 rounded-r-xl">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-vacancies-tbody" class="divide-y divide-slate-100">
+                <!-- Populated dynamically via fetchVacancies() -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Bar for Dashboard Vacancies -->
+          <div id="dashboard-vacancies-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
+            <!-- Populated dynamically via renderPaginationBar() -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================================== -->
+
+      <!-- VIEW 2: TAB DATA PELAMAR GLINTS -->
+      <!-- TAB 2: DATA PELAMAR & PENYARINGAN KUALIFIKASI -->
+      <!-- ============================================================== -->
+      <section id="tab-pelamar" class="hidden space-y-6">
+
+        <!-- Filter & Search Toolbar -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Bank Data Pelamar (Kanal Glints & Internal)</h2>
+              <p class="text-xs text-slate-500">Penyaringan berkas pelamar berdasarkan parameter lowongan mitra pihak
+                ketiga</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="openImportModal()"
+                class="px-3.5 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center space-x-1.5 cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" x2="12" y1="15" y2="3" />
+                </svg>
+                <span>+ Impor Data Glints</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Controls -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 pt-2 border-t border-slate-100 text-xs">
+            <div>
+              <label class="block text-slate-500 font-semibold mb-1">Cari Nama / Email / No. HP</label>
+              <input type="text" id="search-candidate" onkeyup="filterCandidateTable()"
+                placeholder="Ketik kata kunci..."
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-blue-900 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-slate-500 font-semibold mb-1">Posisi Lowongan</label>
+              <select id="filter-posisi" onchange="filterCandidateTable()"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none">
+                <option value="ALL">Semua Posisi Lowongan</option>
+                <option value="Customer Service Rep">Customer Service Rep (Telkom Akses)</option>
+                <option value="Teknisi Jaringan Fiber">Teknisi Jaringan Fiber (Indonusa)</option>
+                <option value="Admin Logistik Gudang">Admin Logistik Gudang (Logistik Prima)</option>
+                <option value="Security Guard">Security Guard (PT KAM)</option>
+                <option value="Administrasi Sistem Operasi">Administrasi Sistem Operasi (Infomedia)</option>
+                <option value="Sales Promotor">Sales Promotor (Erajaya)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-500 font-semibold mb-1">Status Kualifikasi (Sortir I)</label>
+              <select id="filter-status" onchange="filterCandidateTable()"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none">
+                <option value="ALL">Semua Status</option>
+                <option value="Lolos Sortir">Lolos Sortir (Tahap I)</option>
+                <option value="Belum Disortir">Belum Disortir</option>
+                <option value="Tidak Memenuhi Syarat">Tidak Memenuhi Syarat</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-500 font-semibold mb-1">Pendidikan Minimal</label>
+              <select id="filter-pendidikan" onchange="filterCandidateTable()"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none">
+                <option value="ALL">Semua Tingkat</option>
+                <option value="SMA/SMK">SMA/SMK Sederajat</option>
+                <option value="D3">Diploma 3 (D3)</option>
+                <option value="S1">Sarjana (S1)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Candidate Master Data Table -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <span class="text-xs font-bold text-slate-700">Menampilkan Kandidat Terdaftar: <strong id="candidate-count-lbl" class="text-blue-900">-- Orang</strong></span>
+            <div class="flex items-center space-x-2">
+              <button onclick="bulkApproveSortir()"
+                class="px-3 py-1.5 bg-blue-50 text-blue-900 hover:bg-blue-100 border border-blue-200 rounded-xl text-xs font-bold transition cursor-pointer">
+                Tandai Lolos Sortir Terpilih
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs" id="table-candidates">
+              <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-bold">
+                <tr>
+                  <th class="p-3 text-center"><input type="checkbox" id="check-all" onclick="toggleCheckAll(this)"></th>
+                  <th class="p-3">Nama Pelamar & Kontak</th>
+                  <th class="p-3">Posisi Dilamar</th>
+                  <th class="p-3">Kualifikasi Dasar</th>
+                  <th class="p-3">Pengalaman & Sertifikat</th>
+                  <th class="p-3">Tgl Daftar (Glints)</th>
+                  <th class="p-3">Status Seleksi I</th>
+                  <th class="p-3 text-center">Aksi Operasional</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="candidate-tbody">
+                <!-- Dynamically generated rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Bar for Bank Data Pelamar -->
+          <div id="pelamar-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
+            <!-- Populated dynamically via renderPaginationBar() -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================================== -->
+
+      <!-- VIEW 3: TAB JADWAL & FOLLOW-UP WA -->
+      <!-- TAB 3: JADWAL & FOLLOW-UP INTERVIEW (WHATSAPP TRACKER) -->
+      <!-- ============================================================== -->
+      <section id="tab-interview" class="hidden space-y-6">
+
+        <!-- Interview Follow-up Header Banner -->
+        <div
+          class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Konfirmasi Kesediaan & Penjadwalan Wawancara HRD</h2>
+            <p class="text-xs text-slate-500">Pelacakan tindak lanjut respon dan konfirmasi jadwal wawancara kandidat</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span id="interview-header-badge" class="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 text-xs font-bold whitespace-nowrap shrink-0">Konfirmasi: -- Bersedia | -- Tidak Respons</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          <!-- Candidate Follow-up List (Left 2 cols) -->
+          <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-50/50">
+              <div>
+                <span class="text-xs font-bold text-slate-800 block">Daftar Pelamar Lolos Sortir (Tahap I)</span>
+                <span class="text-[11px] text-slate-500">Kandidat memenuhi kualifikasi berkas, siap dijadwalkan wawancara</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-xs font-medium shrink-0">
+                <button onclick="filterInterviewStatus('ALL')" id="btn-filter-int-all"
+                  class="px-2.5 py-1 rounded-lg bg-blue-900 text-white font-bold cursor-pointer transition">Semua (<span id="count-interview-all">--</span>)</button>
+                <button onclick="filterInterviewStatus('Bersedia')" id="btn-filter-int-bersedia"
+                  class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:text-slate-900 cursor-pointer transition">Bersedia (<span id="count-interview-bersedia">--</span>)</button>
+                <button onclick="filterInterviewStatus('Tidak Merespons')" id="btn-filter-int-drop"
+                  class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:text-slate-900 cursor-pointer transition">Drop (<span id="count-interview-drop">--</span>)</button>
+              </div>
+            </div>
+
+            <div class="divide-y divide-slate-100" id="interview-list">
+              <!-- Dynamically populated candidate interview cards -->
+            </div>
+
+            <!-- Pagination Bar for Candidate Interview Cards -->
+            <div id="interview-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
+              <!-- Populated dynamically via renderPaginationBar() -->
+            </div>
+          </div>
+
+          <!-- WhatsApp Gateway Template Preview (Right 1 col) -->
+          <div class="space-y-4">
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div class="flex items-center space-x-2">
+                  <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </div>
+                  <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Template WhatsApp Otomatis</h3>
+                </div>
+
+                <button onclick="toggleWaEditTemplateMode()" id="btn-toggle-edit-template"
+                  class="px-2.5 py-1 text-xs font-bold rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-700 transition flex items-center gap-1.5 cursor-pointer">
+                  <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
+                  <span id="lbl-toggle-edit-template">Edit Template</span>
+                </button>
+              </div>
+
+              <!-- Target candidate info badge -->
+              <div id="wa-target-container" class="p-2.5 bg-blue-50/70 border border-blue-200/80 rounded-xl text-xs flex items-center justify-between gap-2">
+                <div class="truncate">
+                  <span class="text-[10px] font-bold text-blue-800 block">Kandidat Tujuan WA:</span>
+                  <strong id="wa-target-name" class="text-slate-900 text-xs block truncate">Budi Pratama</strong>
+                  <span id="wa-target-posisi" class="text-[11px] text-slate-500 block truncate">Customer Service Rep &bull; PT Telkom Akses</span>
+                </div>
+                <span id="wa-target-badge" class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-white text-blue-900 border border-blue-200 whitespace-nowrap shrink-0">+62 812-9843-1120</span>
+              </div>
+
+              <!-- Switcher template -->
+              <div class="flex gap-1 p-1 bg-slate-100 rounded-xl text-[11px] font-medium">
+                <button onclick="setWaTemplate('undangan')" id="btn-wa-undangan"
+                  class="flex-1 py-1 rounded-lg bg-white text-blue-950 font-bold shadow-2xs transition cursor-pointer">
+                  Undangan
+                </button>
+                <button onclick="setWaTemplate('reminder')" id="btn-wa-reminder"
+                  class="flex-1 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">
+                  H-1
+                </button>
+                <button onclick="setWaTemplate('lolos')" id="btn-wa-lolos"
+                  class="flex-1 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">
+                  Lolos HRD
+                </button>
+              </div>
+
+              <!-- Normal Preview Box Container -->
+              <div id="wa-preview-container" class="space-y-3">
+                <div class="flex items-center justify-between text-[11px] text-slate-500 px-0.5">
+                  <span>Pratinjau Pesan Siap Kirim:</span>
+                  <span class="text-[10px] text-slate-400">Dapat diedit langsung sebelum dikirim</span>
+                </div>
+                <textarea id="wa-preview-text" rows="11"
+                  class="w-full bg-slate-50 border border-slate-200 focus:border-blue-900 focus:ring-1 focus:ring-blue-900 rounded-xl p-3.5 text-[11px] font-mono text-slate-700 leading-relaxed resize-y"></textarea>
+
+                <button onclick="sendSimulatedWa()"
+                  class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition shadow-xs flex items-center justify-center space-x-1.5 cursor-pointer">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="m22 2-7 20-4-9-9-4Z" />
+                    <path d="M22 2 11 13" />
+                  </svg>
+                  <span>Kirim Pesan WhatsApp Langsung</span>
+                </button>
+              </div>
+
+              <!-- Master Template Editor Container (Hidden by default) -->
+              <div id="wa-editor-container" class="hidden space-y-3">
+                <div class="p-3 bg-amber-50/70 border border-amber-200 rounded-xl text-xs text-amber-900">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-[11px]">Edit Format Master: <strong id="wa-editing-template-name" class="uppercase text-amber-950">Undangan</strong></span>
+                    <button type="button" onclick="resetWaTemplateDefault()" class="text-[10px] text-amber-800 hover:underline font-semibold cursor-pointer">Kembalikan Standar</button>
+                  </div>
+                  <p class="text-[10px] text-amber-700 mt-1">Klik tag variabel untuk menyisipkan parameter otomatis ke teks template:</p>
+                  <div class="flex flex-wrap gap-1.5 mt-2">
+                    <button type="button" onclick="insertWaPlaceholder('{nama}')" class="px-2 py-0.5 rounded-md bg-white border border-amber-300 text-amber-900 font-mono text-[10px] font-bold hover:bg-amber-100 transition cursor-pointer">+ {nama}</button>
+                    <button type="button" onclick="insertWaPlaceholder('{posisi}')" class="px-2 py-0.5 rounded-md bg-white border border-amber-300 text-amber-900 font-mono text-[10px] font-bold hover:bg-amber-100 transition cursor-pointer">+ {posisi}</button>
+                    <button type="button" onclick="insertWaPlaceholder('{mitra}')" class="px-2 py-0.5 rounded-md bg-white border border-amber-300 text-amber-900 font-mono text-[10px] font-bold hover:bg-amber-100 transition cursor-pointer">+ {mitra}</button>
+                    <button type="button" onclick="insertWaPlaceholder('{jadwal}')" class="px-2 py-0.5 rounded-md bg-white border border-amber-300 text-amber-900 font-mono text-[10px] font-bold hover:bg-amber-100 transition cursor-pointer">+ {jadwal}</button>
+                  </div>
+                </div>
+
+                <textarea id="wa-template-editor" rows="11"
+                  class="w-full bg-white border border-slate-300 focus:border-blue-900 focus:ring-1 focus:ring-blue-900 rounded-xl p-3.5 text-[11px] font-mono text-slate-800 leading-relaxed resize-y"></textarea>
+
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="saveWaTemplateCustom()"
+                    class="flex-1 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-xs transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    <span>Simpan Perubahan Template</span>
+                  </button>
+                  <button type="button" onclick="toggleWaEditTemplateMode(false)"
+                    class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition cursor-pointer">
+                    Batal
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Single Sheet Update Note -->
+            <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-200 text-xs text-blue-950 space-y-1.5">
+              <span class="font-bold block text-blue-900">Perubahan Status Otomatis</span>
+              <p class="text-[11px] text-blue-800/90 leading-normal">
+                Kandidat yang tidak merespons tetap disimpan di database dengan status <em>"Tidak Merespons /
+                  Batal"</em> sehingga arsip pelamar tidak hilang dan tidak merusak rekapitulasi utama.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ============================================================== -->
+
+      <!-- VIEW 4: TAB REKAPITULASI DUA TAHAP -->
+      <!-- TAB 4: REKAPITULASI DUA TAHAP & PENILAIAN -->
+      <!-- ============================================================== -->
+      <section id="tab-rekapitulasi" class="hidden space-y-6">
+
+        <!-- Recapitulation Tab Switcher (Tahap I vs Tahap II) -->
+        <div
+          class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Pusat Rekapitulasi Data Seleksi Terpadu</h2>
+            <p class="text-xs text-slate-500">Mencegah manipulasi manual antar-tahap pada lembar kerja Excel tunggal</p>
+          </div>
+
+          <!-- Phase Switcher Pills -->
+          <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-semibold">
+            <button onclick="setRekapPhase('tahap1')" id="btn-rekap-tahap1"
+              class="px-3.5 py-1.5 rounded-lg bg-blue-900 text-white font-bold shadow-xs transition cursor-pointer flex items-center space-x-1.5">
+              <span>Rekapitulasi Tahap I (Pra-Wawancara)</span>
+            </button>
+            <button onclick="setRekapPhase('tahap2')" id="btn-rekap-tahap2"
+              class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer flex items-center space-x-1.5">
+              <span>Rekapitulasi Tahap II (Pasca-Wawancara)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Rekapitulasi Table -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <div>
+              <span id="rekap-title-lbl" class="text-xs font-bold text-slate-800">Daftar Rekapitulasi Tahap I (Lolos
+                Sortir Berkas)</span>
+              <p id="rekap-desc-lbl" class="text-[11px] text-slate-500">Kandidat yang memenuhi kualifikasi lowongan dan
+                siap dihubungi untuk wawancara</p>
+            </div>
+            <button onclick="exportRekapExcel()"
+              class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 cursor-pointer">
+              <svg class="w-3.5 h-3.5 text-emerald-700" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" x2="12" y1="15" y2="3" />
+              </svg>
+              <span>Ekspor Rekapitulasi (.xlsx)</span>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs" id="table-rekapitulasi">
+              <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-bold" id="rekap-thead">
+                <!-- Dynamically set by setRekapPhase -->
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="rekap-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Bar for Rekapitulasi Table -->
+          <div id="rekapitulasi-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
+            <!-- Populated dynamically via renderPaginationBar() -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================================== -->
+
+      <!-- VIEW 5: TAB PENYERAHAN CV KE MITRA -->
+      <!-- TAB 5: MASTER MITRA & PENYERAHAN CV KE PIHAK KETIGA -->
+      <!-- ============================================================== -->
+      <section id="tab-penyerahan" class="hidden space-y-6">
+
+                <!-- Header Banner Master Mitra & Penyerahan (Apple HIG Clean White Card) -->
+        <div
+          class="bg-white rounded-3xl p-6 text-slate-900 border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
+          <div class="space-y-1.5">
+            <div
+              class="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-900 border border-blue-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+              <span class="uppercase tracking-wider">Pusat Kendali Mitra Pihak Ketiga & Penyerahan CV</span>
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold tracking-tight text-slate-900">
+              Master Mitra & Penyerahan Berkas CV
+            </h2>
+            <p class="text-xs md:text-sm text-slate-500 max-w-3xl leading-relaxed">
+              Manajemen komprehensif permintaan tenaga kerja mitra rekanan (CRUD lowongan), pemenuhan kuota penempatan, serta paket penyerahan berkas CV kandidat yang telah lolos seleksi HRD.
+            </p>
+          </div>
+          
+          <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2.5">
+            <button onclick="openAddVacancyModal()"
+              class="px-4 py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl text-xs transition shadow-xs flex items-center space-x-2 cursor-pointer active:scale-[0.98]">
+              <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              <span>+ Tambah Permintaan Mitra</span>
+            </button>
+            <button onclick="downloadAllCVBundle()"
+              class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-xs transition shadow-xs flex items-center space-x-2 cursor-pointer active:scale-[0.98]">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Unduh Bundel CV (ZIP)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub-Nav Segmented Controls (Apple HIG) -->
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+          <div class="inline-flex p-1 bg-slate-100 rounded-2xl border border-slate-200 text-xs font-bold space-x-1">
+            <button id="subtab-btn-mitra" onclick="switchMitraSubTab('mitra')"
+              class="px-4 py-2 rounded-xl transition shadow-xs bg-blue-900 text-white cursor-pointer flex items-center space-x-2">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+              <span>Permintaan Mitra Aktif</span>
+              <span id="subtab-mitra-count" class="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-white">0</span>
+            </button>
+            <button id="subtab-btn-cv" onclick="switchMitraSubTab('cv')"
+              class="px-4 py-2 rounded-xl transition text-slate-600 hover:text-slate-900 hover:bg-white/60 cursor-pointer flex items-center space-x-2">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+              </svg>
+              <span>Kirim CV ke Mitra</span>
+              <span id="subtab-cv-count" class="px-1.5 py-0.2 rounded-full text-[10px] bg-red-100 text-red-700">0</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SUB-VIEW 1: MASTER DATA PERMINTAAN MITRA AKTIF (CRUD) -->
+        <div id="subview-mitra-vacancies" class="space-y-6">
+
+          <!-- 4 Mini KPI Cards Permintaan Mitra -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Permintaan Posisi</span>
+              <p class="text-xl font-extrabold text-slate-900" id="mitra-kpi-total-pos">--</p>
+              <span class="text-[11px] text-blue-900 font-medium">Lowongan Terdaftar</span>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Target Kuota Mitra</span>
+              <p class="text-xl font-extrabold text-blue-900" id="mitra-kpi-total-quota">--</p>
+              <span class="text-[11px] text-slate-500">Kebutuhan Tenaga Kerja</span>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kandidat Lolos Seleksi</span>
+              <p class="text-xl font-extrabold text-emerald-600" id="mitra-kpi-total-filled">--</p>
+              <span class="text-[11px] text-emerald-700 font-medium">Siap Penempatan</span>
+            </div>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Rasio Pemenuhan</span>
+              <p class="text-xl font-extrabold text-slate-800" id="mitra-kpi-fill-rate">--%</p>
+              <span class="text-[11px] text-slate-500">Terhadap Total Target</span>
+            </div>
+          </div>
+
+          <!-- Filter & Action Toolbar -->
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="w-full sm:w-80 relative">
+              <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+              </svg>
+              <input type="text" id="search-mitra-input" oninput="filterMitraVacancies()" placeholder="Cari posisi atau nama mitra..."
+                class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium" />
+            </div>
+
+            <div class="w-full sm:w-auto flex items-center justify-end space-x-2">
+              <select id="filter-mitra-status" onchange="filterMitraVacancies()"
+                class="px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium bg-white">
+                <option value="ALL">Semua Status (Aktif & Arsip)</option>
+                <option value="Dibuka" selected>Status: Dibuka (Aktif)</option>
+                <option value="Ditutup">Status: Ditutup</option>
+                <option value="Arsip">Status: Arsip</option>
+              </select>
+
+              <button onclick="fetchVacancies()" title="Muat Ulang Data"
+                class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Table Container (Permintaan Mitra Aktif) -->
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                    <th class="py-3.5 px-4">Posisi & Penempatan</th>
+                    <th class="py-3.5 px-4">Perusahaan Mitra (Pihak Ke-3)</th>
+                    <th class="py-3.5 px-4">Kualifikasi Minimum</th>
+                    <th class="py-3.5 px-4">Target Kuota & Terisi</th>
+                    <th class="py-3.5 px-4 text-center">Status</th>
+                    <th class="py-3.5 px-4 text-right">Aksi Kelola</th>
+                  </tr>
+                </thead>
+                <tbody id="mitra-vacancies-tbody" class="divide-y divide-slate-100 text-slate-700">
+                  <!-- Populated dynamically via renderMitraVacanciesTable() -->
+                  <tr>
+                    <td colspan="6" class="p-8 text-center text-slate-400">Memuat data permintaan mitra aktif...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar for Permintaan Mitra -->
+            <div id="mitra-vacancies-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
+              <!-- Populated dynamically via renderPaginationBar() -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SUB-VIEW 2: KATALOG PENYERAHAN CV KANDIDAT TERPILIH -->
+        <div id="subview-cv-handover" class="hidden space-y-4">
+          <div class="flex items-center justify-between pb-1">
+            <div>
+              <h3 class="text-base font-bold text-slate-800">Daftar Kandidat Terpilih Siap Penyerahan</h3>
+              <p class="text-xs text-slate-500">Kandidat yang telah lulus seleksi wawancara HRD untuk diserahkan ke masing-masing mitra perusahaan.</p>
+            </div>
+          </div>
+
+          <!-- Candidate Cards Ready for Third-Party (1 Kolom Vertikal) -->
+          <div class="space-y-4" id="thirdparty-grid">
+            <!-- Populated dynamically with selected candidates who passed HRD -->
+          </div>
+
+          <!-- Pagination Bar for Kirim CV ke Mitra -->
+          <div id="thirdparty-pagination" class="p-3.5 sm:p-4 bg-white rounded-2xl border border-slate-200 shadow-xs">
+            <!-- Populated dynamically via renderPaginationBar() -->
+          </div>
+        </div>
+
+      </section>
+
+
+    </main>
+
+  </div>
+
+  <!-- 3. MODAL DIALOGS COMPONENT -->
+  <!-- 3. MODAL DIALOGS -->
+  <!-- ============================================================== -->
+
+  <!-- MODAL 1: DETAIL PELAMAR & PRATINJAU CV LENGKAP (DOSSIER GLINTS) -->
+  <div id="modal-candidate"
+    class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4">
+    <div
+      class="modal-dialog-content bg-white rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-hidden flex flex-col shadow-2xl border border-slate-200">
+
+      <!-- Modal Header (Apple HIG Clean Bar with Toolbar) -->
+      <div
+        class="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/80">
+        <div class="flex items-center space-x-3.5">
+          <div
+            class="w-12 h-12 rounded-2xl bg-blue-900 text-white font-extrabold text-base flex items-center justify-center shadow-xs shrink-0"
+            id="m-avatar">
+            BP
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-bold text-slate-900 tracking-tight" id="m-name">Budi Pratama</h3>
+              <span id="m-status-sortir-badge"
+                class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-900 border border-blue-200 whitespace-nowrap shrink-0">
+                Lolos Sortir (I)
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 font-medium mt-0.5" id="m-posisi">Customer Service Rep &bull; Mitra: PT
+              Telkom Akses</p>
+          </div>
+        </div>
+
+        <!-- Action Toolbar -->
+        <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end no-print">
+          <button onclick="printCvModal()"
+            class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs transition flex items-center gap-1.5 cursor-pointer">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <path d="M6 9V2h12v7" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+            <span>Cetak / Ekspor PDF</span>
+          </button>
+
+          <button onclick="copyCandidateSummary()"
+            class="px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs transition flex items-center gap-1.5 cursor-pointer">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            <span>Salin Profil</span>
+          </button>
+
+          <button onclick="closeModal('modal-candidate')"
+            class="p-1.5 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-700 transition cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (The Full Interactive CV Sheet) -->
+      <div class="p-6 overflow-y-auto custom-scroll space-y-5 text-xs bg-slate-50/40" id="cv-printable-area">
+
+        <!-- Section: Glints Verification Banner -->
+        <div
+          class="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div class="flex items-center space-x-2.5">
+            <div
+              class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <polyline points="9 12 11 14 15 10" />
+              </svg>
+            </div>
+            <div>
+              <span class="font-bold text-slate-900 block text-xs">Curriculum Vitae Terverifikasi &bull; Glints
+                Recruitment System</span>
+              <span class="text-[11px] text-slate-500">Berkas dan riwayat kerja resmi terhubung langsung dengan
+                pendaftaran di portal Glints.</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-mono font-semibold text-slate-400" id="m-glints-id">GLINTS-ID-88219</span>
+            <span
+              class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap shrink-0">
+              Status Valid
+            </span>
+          </div>
+        </div>
+
+        <!-- Section: Contact & Personal Overview Grid -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-blue-900" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Data Pribadi & Kontak Pelamar
+          </h4>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+            <div>
+              <span class="text-slate-400 block text-[10px]">Nomor WhatsApp</span>
+              <strong class="text-slate-900 text-xs block font-bold" id="m-phone">+62 812-9843-1120</strong>
+              <span class="text-[10px] text-emerald-600 font-medium">Terhubung Aktif</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px]">Alamat Email</span>
+              <strong class="text-slate-900 text-xs block font-bold truncate"
+                id="m-email">budi.pratama@gmail.com</strong>
+              <span class="text-[10px] text-slate-400">Email Utama</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px]">Pendidikan Terakhir</span>
+              <strong class="text-slate-900 text-xs block font-bold" id="m-edu">S1 - Undip (IPK 3.52)</strong>
+              <span class="text-[10px] text-slate-400">Kualifikasi Sesuai</span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-[10px]">Domisili & Usia</span>
+              <strong class="text-slate-900 text-xs block font-bold" id="m-domisili">Semarang (23 Thn)</strong>
+              <span class="text-[10px] text-slate-400">Wilayah Penempatan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Executive Summary -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-2">
+          <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-blue-900" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+            Ringkasan Profil Profesional
+          </h4>
+          <p class="text-slate-600 leading-relaxed text-xs p-3.5 bg-slate-50/70 rounded-xl border border-slate-100"
+            id="m-summary">
+            Memuat ringkasan profil kandidat...
+          </p>
+        </div>
+
+        <!-- Section: Riwayat Pengalaman Kerja -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3.5">
+          <div class="flex justify-between items-center">
+            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-blue-900" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+              Riwayat Pengalaman Kerja & Magang
+            </h4>
+            <span
+              class="text-[10px] font-bold text-blue-900 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200/60 whitespace-nowrap shrink-0"
+              id="m-exp-total-badge">
+              2 Pengalaman Terverifikasi
+            </span>
+          </div>
+
+          <div id="m-experience-list" class="space-y-3">
+            <!-- Dynamically populated experience timeline cards -->
+          </div>
+        </div>
+
+        <!-- Section: Sertifikasi & Lisensi Resmi -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3.5">
+          <div class="flex justify-between items-center">
+            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-blue-900" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="7" />
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+              </svg>
+              Sertifikat & Lisensi Kompetensi Profesi
+            </h4>
+            <span
+              class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/70 whitespace-nowrap shrink-0"
+              id="m-cert-count-badge">
+              Terakreditasi BNSP & Lembaga Resmi
+            </span>
+          </div>
+
+          <div id="m-certificates-list" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <!-- Dynamically populated certificate cards -->
+          </div>
+        </div>
+
+        <!-- Section: Keahlian & Kualifikasi Tambahan -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3">
+          <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-blue-900" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+            Kompetensi & Keterampilan Utama
+          </h4>
+          <div id="m-skills-list" class="flex flex-wrap gap-2">
+            <!-- Dynamically populated skill tags -->
+          </div>
+        </div>
+
+        <!-- Berkas Asli CV Download Bar -->
+        <div
+          class="p-4 rounded-2xl border border-slate-200 bg-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs no-print">
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-red-50 text-red-600 border border-red-200 flex items-center justify-center font-bold text-xs shrink-0">
+              PDF
+            </div>
+            <div>
+              <strong class="text-slate-900 block text-xs" id="m-cv-file">Curriculum_Vitae_Kandidat.pdf</strong>
+              <span class="text-[11px] text-slate-400">Berkas pendaftaran asli yang diunggah kandidat di portal
+                Glints</span>
+            </div>
+          </div>
+          <button onclick="downloadOriginalCvFile()"
+            class="px-3.5 py-1.5 bg-blue-900 hover:bg-blue-800 text-white rounded-xl font-semibold text-xs transition cursor-pointer shrink-0">
+            Unduh Berkas Glints (PDF)
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div
+        class="p-4 border-t border-slate-100 bg-slate-50/90 flex flex-col sm:flex-row justify-between items-center gap-3 no-print">
+        <div class="text-[11px] text-slate-500 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0"></span>
+          <span>Data terintegrasi dalam 1 master database seleksi PT KAM.</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="closeModal('modal-candidate')"
+            class="px-4 py-2 border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100 transition cursor-pointer text-xs">
+            Tutup
+          </button>
+          <div id="m-action-btn-container">
+            <!-- Dynamic context button -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL 2: KEPUTUSAN WAWANCARA HRD (TAHAP II) -->
+  <div id="modal-scoring"
+    class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl border border-slate-200">
+
+      <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/80">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900">Keputusan Wawancara HRD (Tahap II)</h3>
+          <p class="text-xs text-slate-500" id="score-name">Budi Pratama (Customer Service)</p>
+          <button onclick="closeModal('modal-scoring'); openCandidateDetail(currentSelectedCandidateId);" class="inline-flex items-center gap-1 text-[11px] text-blue-900 hover:underline font-semibold mt-1 cursor-pointer">
+            <span>Lihat Berkas CV Pelamar</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+        <button onclick="closeModal('modal-scoring')" class="p-1.5 rounded-full hover:bg-slate-200 text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-700 font-bold mb-1.5">Keputusan Hasil Wawancara HRD</label>
+          <select id="select-status-hrd"
+            class="w-full bg-white border border-slate-300 rounded-xl p-3 font-bold text-slate-900 focus:ring-2 focus:ring-blue-900 focus:outline-none">
+            <option value="Lolos Seleksi HRD">Lolos Seleksi HRD</option>
+            <option value="Tidak Lolos">Tidak Lolos</option>
+          </select>
+          <p class="text-[11px] text-slate-400 mt-1">Pilih langsung keputusan kelulusan wawancara tanpa formula angka
+            bobot.</p>
+        </div>
+        <div>
+          <label class="block text-slate-700 font-bold mb-1.5">Catatan Evaluator Wawancara HRD</label>
+          <textarea id="input-catatan-hrd"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 h-24 focus:bg-white focus:ring-2 focus:ring-blue-900 focus:outline-none leading-relaxed text-xs"
+            placeholder="Tuliskan catatan hasil wawancara, observasi sikap, kesiapan kerja shift, dan kualifikasi kandidat..."></textarea>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-100 bg-slate-50/90 flex justify-end space-x-2">
+        <button onclick="closeModal('modal-scoring')"
+          class="px-4 py-2 border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100 text-xs">Batal</button>
+        <button onclick="saveInterviewScore()"
+          class="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl shadow-xs text-xs">Simpan
+          Keputusan & Perbarui Rekap</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL 3: IMPOR BERKAS GLINTS -->
+  <div id="modal-import"
+    class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto flex flex-col shadow-2xl border border-slate-200">
+
+      <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+        <h3 class="text-sm font-bold text-slate-900">Impor Berkas Pelamar Glints</h3>
+        <button onclick="closeModal('modal-import')" class="p-1.5 rounded-full hover:bg-slate-200 text-slate-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs">
+        <p class="text-slate-500">
+          Unggah berkas ekspor pelamar resmi (.csv atau .xlsx) dari portal Glints Indonesia untuk diproses secara
+          otomatis ke sistem internal PT KAM.
+        </p>
+
+        <div
+          class="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center bg-slate-50 hover:bg-slate-100 transition cursor-pointer"
+          onclick="document.getElementById('file-import-input').click()">
+          <input type="file" id="file-import-input" accept=".xlsx,.xls,.csv" class="hidden"
+            onchange="document.getElementById('selected-file-lbl').textContent = this.files[0]?.name || ''">
+          <p id="selected-file-lbl" class="text-xs font-semibold text-blue-900 mb-1"></p>
+          <svg class="w-8 h-8 text-blue-900 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" x2="12" y1="3" y2="15" />
+          </svg>
+          <span class="font-bold text-slate-800 block text-xs">Klik untuk pilih berkas Glints</span>
+          <span class="text-[11px] text-slate-400">Mendukung format .CSV atau .XLSX (Maks 15MB)</span>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end space-x-2">
+        <button onclick="closeModal('modal-import')"
+          class="px-4 py-2 border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-100">Batal</button>
+        <button onclick="executeImportSimulation()"
+          class="px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl shadow-xs">Mulai Impor &
+          Parsing</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL 4: FORM TAMBAH / EDIT PERMINTAAN MITRA (JOB VACANCY CRUD) -->
+  <div id="modal-vacancy"
+    class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4">
+    <div
+      class="modal-dialog-content bg-white rounded-3xl w-full max-w-xl max-h-[92vh] overflow-hidden flex flex-col shadow-2xl border border-slate-200">
+
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/80">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-900 text-white font-bold flex items-center justify-center shadow-xs">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 tracking-tight" id="modal-vac-title">Tambah Permintaan Mitra Baru</h3>
+            <p class="text-xs text-slate-500">Kelola kuota posisi tenaga kerja dari perusahaan mitra pihak ketiga</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-vacancy')"
+          class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition cursor-pointer"
+          aria-label="Tutup modal">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Form Body -->
+      <form id="form-vacancy" onsubmit="handleSaveVacancy(event)" class="p-6 overflow-y-auto space-y-4 text-xs">
+        <input type="hidden" id="vac-id" name="id" value="" />
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Posisi Jabatan / Kebutuhan *</label>
+          <input type="text" id="vac-position" required placeholder="Contoh: Customer Service Rep, Teknisi Jaringan"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium" />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nama Perusahaan Mitra (Pihak Ke-3) *</label>
+          <input type="text" id="vac-partner" required placeholder="Contoh: PT Telkom Akses, PT Indonusa Telemedia"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Kota Penempatan *</label>
+            <input type="text" id="vac-city" required placeholder="Contoh: Semarang"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Target Kuota (Orang) *</label>
+            <input type="number" id="vac-quota" min="1" required placeholder="Contoh: 15"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Pendidikan Minimal *</label>
+            <select id="vac-edu"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium bg-white">
+              <option value="SMA/SMK">SMA/SMK Sederajat</option>
+              <option value="D3">Diploma (D3)</option>
+              <option value="S1">Sarjana (S1)</option>
+              <option value="S2">Magister (S2)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Usia Maksimal (Tahun) *</label>
+            <input type="number" id="vac-age" min="18" max="65" required placeholder="Contoh: 27"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Status Lowongan *</label>
+          <select id="vac-status"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium bg-white">
+            <option value="Dibuka">Dibuka (Aktif Menerima Pelamar)</option>
+            <option value="Ditutup">Ditutup (Proses Seleksi Selesai)</option>
+            <option value="Arsip">Arsip (Tidak Aktif)</option>
+          </select>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-end space-x-2">
+          <button type="button" onclick="closeModal('modal-vacancy')"
+            class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 transition cursor-pointer">
+            Batal
+          </button>
+          <button type="submit" id="btn-save-vac"
+            class="px-5 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-bold transition shadow-xs cursor-pointer flex items-center space-x-2">
+            <span>Simpan Data</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: KONFIRMASI HAPUS PERMINTAAN MITRA -->
+  <div id="modal-delete-vacancy"
+    class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4">
+    <div
+      class="modal-dialog-content bg-white rounded-3xl w-full max-w-md overflow-hidden flex flex-col shadow-2xl border border-slate-200 p-6 space-y-4">
+      <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mx-auto">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        </svg>
+      </div>
+      <div class="text-center space-y-1">
+        <h4 class="text-base font-bold text-slate-900" id="del-vac-title">Hapus Permintaan Mitra?</h4>
+        <p class="text-xs text-slate-500 leading-relaxed" id="del-vac-desc">Apakah Anda yakin ingin menghapus data permintaan lowongan ini dari sistem?</p>
+      </div>
+      <div class="flex items-center justify-center space-x-2 pt-2">
+        <button type="button" onclick="closeModal('modal-delete-vacancy')"
+          class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-100 transition cursor-pointer text-xs">
+          Batal
+        </button>
+        <button type="button" id="btn-confirm-delete-vac"
+          class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition shadow-xs cursor-pointer text-xs">
+          Hapus Permanen
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 4. TOAST NOTIFICATION COMPONENT -->
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast"
+    class="hidden fixed bottom-6 right-6 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 z-50 text-xs border border-slate-800">
+    <div id="toast-icon" class="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white">✓</div>
+    <span id="toast-msg">Operasi berhasil dijalankan.</span>
+  </div>
+
+  <!-- ============================================================== -->
+
+  <!-- 5. FLOATING MOBILE BOTTOM NAVIGATION BAR COMPONENT -->
+  <!-- FLOATING MOBILE BOTTOM NAVIGATION BAR (DOCK FLOATING TAB BAR) -->
+  <!-- ============================================================== -->
+  <nav id="mobile-bottom-nav" aria-label="Navigasi Melayang Mobile"
+    class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-[0_-4px_25px_rgba(0,0,0,0.08)] px-2 py-1 flex justify-around items-center">
+    
+    <button onclick="switchTab('dashboard')" id="mobile-nav-dashboard"
+      class="flex-1 flex flex-col items-center justify-center py-1.5 text-blue-900 font-bold transition cursor-pointer">
+      <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <rect width="7" height="9" x="3" y="3" rx="1" />
+        <rect width="7" height="5" x="14" y="3" rx="1" />
+        <rect width="7" height="9" x="14" y="12" rx="1" />
+        <rect width="7" height="5" x="3" y="16" rx="1" />
+      </svg>
+      <span class="text-[10px] mt-0.5 tracking-tight font-medium">Dashboard</span>
+    </button>
+
+    <button onclick="switchTab('pelamar')" id="mobile-nav-pelamar"
+      class="flex-1 flex flex-col items-center justify-center py-1.5 text-slate-400 hover:text-slate-600 transition cursor-pointer">
+      <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+      <span class="text-[10px] mt-0.5 tracking-tight font-medium">Pelamar</span>
+    </button>
+
+    <button onclick="switchTab('interview')" id="mobile-nav-interview"
+      class="flex-1 flex flex-col items-center justify-center py-1.5 text-slate-400 hover:text-slate-600 transition cursor-pointer">
+      <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <rect width="18" height="18" x="3" y="4" rx="2" />
+        <line x1="16" x2="16" y1="2" y2="6" />
+        <line x1="8" x2="8" y1="2" y2="6" />
+        <line x1="3" x2="21" y1="10" y2="10" />
+        <path d="m9 16 2 2 4-4" />
+      </svg>
+      <span class="text-[10px] mt-0.5 tracking-tight font-medium">Jadwal WA</span>
+    </button>
+
+    <button onclick="switchTab('rekapitulasi')" id="mobile-nav-rekapitulasi"
+      class="flex-1 flex flex-col items-center justify-center py-1.5 text-slate-400 hover:text-slate-600 transition cursor-pointer">
+      <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" x2="8" y1="13" y2="13" />
+        <line x1="16" x2="8" y1="17" y2="17" />
+      </svg>
+      <span class="text-[10px] mt-0.5 tracking-tight font-medium">Rekap</span>
+    </button>
+
+    <button onclick="switchTab('penyerahan')" id="mobile-nav-penyerahan"
+      class="flex-1 flex flex-col items-center justify-center py-1.5 text-slate-400 hover:text-slate-600 transition cursor-pointer">
+      <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8" />
+        <polyline points="15 16 19 20 23 16" />
+        <line x1="19" x2="19" y1="10" y2="20" />
+      </svg>
+      <span class="text-[10px] mt-0.5 tracking-tight font-bold text-red-600">Mitra</span>
+    </button>
+
+  </nav>
+
+  <!-- 6. MODULAR JAVASCRIPT ARCHITECTURE -->
+  <script src="/js/app.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/pelamar.js"></script>
+  <script src="/js/interview.js"></script>
+  <script src="/js/rekapitulasi.js"></script>
+  <script src="/js/penyerahan.js"></script>
+  <script src="/js/modals.js"></script>
+
+</body>
+
+</html>
+

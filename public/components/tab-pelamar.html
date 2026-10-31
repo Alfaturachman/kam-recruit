@@ -1,0 +1,110 @@
+<!-- TAB 2: DATA PELAMAR & PENYARINGAN KUALIFIKASI -->
+      <!-- ============================================================== -->
+      <section id="tab-pelamar" class="hidden space-y-6">
+
+        <!-- Filter & Search Toolbar -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-900">Bank Data Pelamar (Kanal Glints & Internal)</h2>
+              <p class="text-xs text-slate-500">Penyaringan berkas pelamar berdasarkan parameter lowongan mitra pihak
+                ketiga</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="openImportModal()"
+                class="px-3.5 py-2 bg-blue-900 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center space-x-1.5 cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" x2="12" y1="15" y2="3" />
+                </svg>
+                <span>+ Impor Data Glints</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Filter Controls -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5 pt-2 border-t border-slate-100 text-xs">
+            <div>
+              <label class="block text-slate-500 font-semibold mb-1">Cari Nama / Email / No. HP</label>
+              <input type="text" id="search-candidate" onkeyup="filterCandidateTable()"
+                placeholder="Ketik kata kunci..."
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-blue-900 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-slate-500 font-semibold mb-1">Posisi Lowongan</label>
+              <select id="filter-posisi" onchange="filterCandidateTable()"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none">
+                <option value="ALL">Semua Posisi Lowongan</option>
+                <option value="Customer Service Rep">Customer Service Rep (Telkom Akses)</option>
+                <option value="Teknisi Jaringan Fiber">Teknisi Jaringan Fiber (Indonusa)</option>
+                <option value="Admin Logistik Gudang">Admin Logistik Gudang (Logistik Prima)</option>
+                <option value="Security Guard">Security Guard (PT KAM)</option>
+                <option value="Administrasi Sistem Operasi">Administrasi Sistem Operasi (Infomedia)</option>
+                <option value="Sales Promotor">Sales Promotor (Erajaya)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-500 font-semibold mb-1">Status Kualifikasi (Sortir I)</label>
+              <select id="filter-status" onchange="filterCandidateTable()"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none">
+                <option value="ALL">Semua Status</option>
+                <option value="Lolos Sortir">Lolos Sortir (Tahap I)</option>
+                <option value="Belum Disortir">Belum Disortir</option>
+                <option value="Tidak Memenuhi Syarat">Tidak Memenuhi Syarat</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-500 font-semibold mb-1">Pendidikan Minimal</label>
+              <select id="filter-pendidikan" onchange="filterCandidateTable()"
+                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none">
+                <option value="ALL">Semua Tingkat</option>
+                <option value="SMA/SMK">SMA/SMK Sederajat</option>
+                <option value="D3">Diploma 3 (D3)</option>
+                <option value="S1">Sarjana (S1)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Candidate Master Data Table -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+            <span class="text-xs font-bold text-slate-700">Menampilkan Kandidat Terdaftar: <strong id="candidate-count-lbl" class="text-blue-900">-- Orang</strong></span>
+            <div class="flex items-center space-x-2">
+              <button onclick="bulkApproveSortir()"
+                class="px-3 py-1.5 bg-blue-50 text-blue-900 hover:bg-blue-100 border border-blue-200 rounded-xl text-xs font-bold transition cursor-pointer">
+                Tandai Lolos Sortir Terpilih
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs" id="table-candidates">
+              <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-bold">
+                <tr>
+                  <th class="p-3 text-center"><input type="checkbox" id="check-all" onclick="toggleCheckAll(this)"></th>
+                  <th class="p-3">Nama Pelamar & Kontak</th>
+                  <th class="p-3">Posisi Dilamar</th>
+                  <th class="p-3">Kualifikasi Dasar</th>
+                  <th class="p-3">Pengalaman & Sertifikat</th>
+                  <th class="p-3">Tgl Daftar (Glints)</th>
+                  <th class="p-3">Status Seleksi I</th>
+                  <th class="p-3 text-center">Aksi Operasional</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="candidate-tbody">
+                <!-- Dynamically generated rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Bar for Bank Data Pelamar -->
+          <div id="pelamar-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
+            <!-- Populated dynamically via renderPaginationBar() -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============================================================== -->

@@ -1,0 +1,79 @@
+services:
+  # 1. Reverse Proxy Nginx & Caching
+  nginx:
+    image: nginx:alpine
+    container_name: kam-recruit-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    networks:
+      - kam-network
+
+  # 2. Application Core Backend (Node.js Express)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kam-recruit-app
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - APP_NAME=KAM Recruit
+      - APP_PORT=3000
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-kam_recruit_db}
+      - DB_USERNAME=${DB_USERNAME:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-Kary4M4nd1r1_Secur3DB2026!}
+      - CORS_ORIGIN=*
+    volumes:
+      - kam_cv_storage:/app/uploads/cv
+      - kam_excel_storage:/app/uploads/excels
+    depends_on:
+      - db
+      - redis
+    networks:
+      - kam-network
+
+  # 3. Master Database MySQL 8.0 InnoDB
+  db:
+    image: mysql:8.0
+    container_name: kam-recruit-db
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Kary4M4nd1r1_Secur3DB2026!}
+      MYSQL_DATABASE: ${DB_DATABASE:-kam_recruit_db}
+    volumes:
+      - kam_db_data:/var/lib/mysql
+      - ./src/database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    networks:
+      - kam-network
+
+  # 4. Redis Cache & Session
+  redis:
+    image: redis:7-alpine
+    container_name: kam-recruit-redis
+    restart: always
+    networks:
+      - kam-network
+
+volumes:
+  kam_cv_storage:
+    name: kam_cv_storage
+  kam_excel_storage:
+    name: kam_excel_storage
+  kam_db_data:
+    name: kam_db_data
+
+networks:
+  kam-network:
+    name: kam-network
+    driver: bridge
+

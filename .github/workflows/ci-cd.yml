@@ -1,0 +1,134 @@
+name: KAM Recruit CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # ============================================================================
+  # 1. CONTINUOUS INTEGRATION: LINTING & AUTOMATED UNIT TESTING
+  # ============================================================================
+  test:
+    name: Run Unit & Integration Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: kam_recruit_db
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Initialize Database Schema
+        run: node src/database/seed.js
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USERNAME: root
+          DB_PASSWORD: rootpassword
+          DB_DATABASE: kam_recruit_db
+
+      - name: Run Jest Test Suites
+        run: npm test
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USERNAME: root
+          DB_PASSWORD: rootpassword
+          DB_DATABASE: kam_recruit_db
+
+  # ============================================================================
+  # 2. CONTAINER PACKAGING & SECURITY VULNERABILITY SCANNING
+  # ============================================================================
+  security-and-build:
+    name: Docker Build & Vulnerability Scan
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Production Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: kam-recruit-app:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'kam-recruit-app:latest'
+          format: 'table'
+          exit-code: '0' # Non-blocking scan report
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+  # ============================================================================
+  # 3. CONTINUOUS DEPLOYMENT (CD) TO PT KAM SERVER
+  # ============================================================================
+  deploy:
+    name: Deploy to Production Server
+    needs: [test, security-and-build]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Execute Remote SSH Deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PROD_SERVER_HOST }}
+          username: ${{ secrets.PROD_SERVER_USER }}
+          key: ${{ secrets.PROD_SERVER_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            echo "[DEPLOY] Navigating to application directory..."
+            cd /var/www/kam-recruit
+
+            echo "[DEPLOY] Pulling latest git changes..."
+            git pull origin main
+
+            echo "[DEPLOY] Rolling update application container..."
+            docker compose pull app
+            docker compose up -d --no-deps app
+
+            echo "[DEPLOY] Waiting for service warm up..."
+            sleep 10
+
+            echo "[DEPLOY] Executing post-deployment health check..."
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/api/v1/health || echo "FAILED")
+
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "[DEPLOY SUCCESS] Health check 200 OK. System deployed successfully!"
+            else
+              echo "[DEPLOY ERROR] Health check failed with status $HTTP_CODE! Initiating rollback..."
+              docker compose rollback app || docker compose restart app
+              exit 1
+            fi
+
