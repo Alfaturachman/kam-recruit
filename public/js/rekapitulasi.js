@@ -32,7 +32,7 @@ function setRekapPhase(phase, resetPage = true) {
       <tr>
         <th class="p-3">No</th>
         <th class="p-3">Nama & Kontak</th>
-        <th class="p-3">Posisi & Mitra Rekanan</th>
+        <th class="p-3">Posisi</th>
         <th class="p-3">Pendidikan</th>
         <th class="p-3">Status Konfirmasi</th>
       </tr>

@@ -386,7 +386,7 @@ class Candidate {
   static async findForZipBundle(vacancyId, fallbackLimit = 5) {
     let [candidates] = await pool.query(
       `SELECT * FROM candidates 
-       WHERE vacancy_id = ? AND status_hrd = 'Lolos Seleksi HRD'`,
+       WHERE vacancy_id = ? AND status_sortir = 'Lolos Sortir' AND status_hrd = 'Lolos Seleksi HRD'`,
       [vacancyId]
     );
 

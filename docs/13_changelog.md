@@ -5,6 +5,41 @@
 
 ---
 
+## [2.13.0] - 2026-11-01
+### Penataan Responsif Tab Penyerahan, Validasi Kualifikasi Mitra, Penghapusan Kolom Sertifikasi & Penambahan Kolom Nomor Urut
+Pembaruan berfokus pada perbaikan pembatasan kontainer responsif tabel penyerahan berkas ke mitra, validasi ganda kualifikasi sortir pada agregasi penyerahan mitra, penyederhanaan kolom tabel penyerahan berkas CV dengan menghapus kolom sertifikasi, serta penggantian badge avatar inisial pelamar dengan kolom nomor urut terstruktur.
+
+### Changed (Penyederhanaan Tampilan & Tata Letak)
+* **Penghapusan Kolom Pendidikan pada Daftar Kandidat Terpilih Siap Penyerahan (`public/components/tab-penyerahan.html` & `public/js/penyerahan.js`)**:
+  - Menghapus kolom header `<th class="py-3.5 px-4">Pendidikan</th>` dan data sel pendidikan/kampus pada baris tabel penyerahan (`#thirdparty-tbody`).
+  - Mengubah atribut `colspan` tabel status kosong/memuat data dari `7` menjadi `6`.
+  - Merampingkan struktur tabel menjadi 6 kolom esensial: No, Kandidat, Posisi & Mitra Rekanan, Pengalaman Kerja, Status Seleksi, dan Aksi.
+* **Penyusunan Vertikal Tombol Aksi Kolom Penyerahan (`public/js/penyerahan.js`)**:
+  - Mengubah penataan tombol aksi ("Lihat CV" dan "Kirim ke Mitra") dari berdampingan horizontal (*side-by-side*) menjadi bertumpuk vertikal (*1 baris per button* menggunakan `flex flex-col space-y-1.5 items-stretch w-[118px] ml-auto`).
+  - Menampilkan label teks "Lihat CV" secara konsisten pada semua ukuran layar sehingga lebih jelas dan mudah diklik.
+* **Penyederhanaan Kolom Status Seleksi (`public/components/tab-penyerahan.html` & `public/js/penyerahan.js`)**:
+  - Mengubah teks badge dari `✓ Lolos Seleksi HRD` menjadi ringkas **"Lolos Seleksi"** tanpa ikon centang.
+  - Menghapus subteks catatan evaluator di bawah badge status kelulusan agar tampilan baris tabel tetap bersih dan rapi.
+  - Memperbarui label header tabel menjadi **"Status Seleksi"**.
+* **Penambahan Kolom Nomor Urut & Pembersihan Avatar Pelamar (`public/components/tab-penyerahan.html` & `public/js/penyerahan.js`)**:
+  - Menghapus elemen kotak badge avatar inisial nama pelamar (`div` inisial seperti "HK") pada kolom Kandidat.
+  - Menambahkan kolom terdedikasi **"No"** pada urutan pertama tabel (`<th class="py-3.5 px-3 text-center w-12">No</th>`) yang menampilkan nomor urut terpaginasi (`startIndex + index + 1`).
+  - Menyelaraskan nama kandidat dan detail domisili agar tampil bersih dan rapat ke kiri tanpa pergeseran indentasi avatar.
+* **Penghapusan Kolom Sertifikasi pada Daftar Kandidat Terpilih Siap Penyerahan (`public/components/tab-penyerahan.html` & `public/js/penyerahan.js`)**:
+  - Menghapus kolom header `<th class="py-3.5 px-4">Sertifikasi</th>` dan data sel sertifikasi pada baris tabel (`#thirdparty-tbody`).
+  - Menyesuaikan atribut `colspan` tabel kosong/memuat data menjadi `7` (memperhitungkan kolom No).
+  - Merampingkan lebar tabel sehingga seluruh data (No, Kandidat, Posisi & Mitra, Pendidikan, Pengalaman, Status HRD, Aksi) tertata proporsional dan tidak berdesakan.
+* **Perbaikan Batas Kontainer Tata Letak (*Layout Boundary Fix*)**:
+  - Menambahkan utilitas `min-w-0` pada elemen `<main>` di [`public/index.template.html`](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/kam-recruit/public/index.template.html) dan `<section id="tab-penyerahan">` di [`public/components/tab-penyerahan.html`](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/kam-recruit/public/components/tab-penyerahan.html) guna mencegah pembesaran flex item melebihi lebar layar (*horizontal page blowout*).
+  - Memberikan batas minimum lebar tabel responsif `min-w-[700px]` pada pembungkus tabel `overflow-x-auto min-w-0`.
+
+### Fixed (Integritas Data Kualifikasi Mitra)
+* **Validasi Ketat Kualifikasi Penyerahan Mitra ([`src/models/Vacancy.js`](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/kam-recruit/src/models/Vacancy.js) & [`src/models/Candidate.js`](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/kam-recruit/src/models/Candidate.js))**:
+  - Memperbaiki kalkulasi kuota terisi (`passed_hrd`) dan query pengunduhan bundel ZIP agar mewajibkan kandidat berstatus `status_sortir = 'Lolos Sortir' AND status_hrd = 'Lolos Seleksi HRD'`.
+  - Memperketat filter pada [`public/js/penyerahan.js`](file:///d:/A11.2025.16609/SEMESTER%203/KERJA%20PRAKTEK/kam-recruit/public/js/penyerahan.js) agar kandidat yang tidak memenuhi syarat (misalnya melebihi batas usia maksimal) tidak muncul di daftar penyerahan mitra.
+
+---
+
 ## [2.12.0] - 2026-10-31
 ### Modal Konfirmasi Sortir, Pembatalan Status Siap Interview, Redesain Tabel Penyerahan & Penjadwalan Wawancara Fleksibel
 Pembaruan berfokus pada penyempurnaan alur kerja seleksi pelamar, pencegahan kesalahan operasional recruiter (*human error*) melalui dialog konfirmasi, kemampuan membatalkan status lolos (*revert to initial*), transformasi tampilan kandidat siap penyerahan menjadi tabel terstruktur, serta penambahan kontrol tanggal dan jam wawancara presisi.

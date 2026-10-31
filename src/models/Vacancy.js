@@ -24,7 +24,7 @@ class Vacancy {
         v.updated_at,
         COUNT(c.id) AS total_applicants,
         SUM(CASE WHEN c.status_sortir = 'Lolos Sortir' THEN 1 ELSE 0 END) AS passed_sortir,
-        SUM(CASE WHEN c.status_hrd = 'Lolos Seleksi HRD' THEN 1 ELSE 0 END) AS passed_hrd
+        SUM(CASE WHEN c.status_sortir = 'Lolos Sortir' AND c.status_hrd = 'Lolos Seleksi HRD' THEN 1 ELSE 0 END) AS passed_hrd
       FROM job_vacancies v
       LEFT JOIN candidates c ON v.id = c.vacancy_id
       GROUP BY 
@@ -44,7 +44,7 @@ class Vacancy {
         v.*,
         COUNT(c.id) AS total_applicants,
         SUM(CASE WHEN c.status_sortir = 'Lolos Sortir' THEN 1 ELSE 0 END) AS passed_sortir,
-        SUM(CASE WHEN c.status_hrd = 'Lolos Seleksi HRD' THEN 1 ELSE 0 END) AS passed_hrd
+        SUM(CASE WHEN c.status_sortir = 'Lolos Sortir' AND c.status_hrd = 'Lolos Seleksi HRD' THEN 1 ELSE 0 END) AS passed_hrd
       FROM job_vacancies v
       LEFT JOIN candidates c ON v.id = c.vacancy_id
       WHERE v.id = ?

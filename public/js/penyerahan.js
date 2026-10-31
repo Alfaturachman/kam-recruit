@@ -83,7 +83,7 @@ function renderMitraVacanciesTable(items = null) {
   const badgeMitra = document.getElementById('subtab-mitra-count');
   if (badgeMitra) badgeMitra.textContent = (vacancies || []).length;
 
-  const qualifiedCount = (candidates || []).filter(c => c.statusHRD === 'Lolos Seleksi HRD').length;
+  const qualifiedCount = (candidates || []).filter(c => c.statusSortir === 'Lolos Sortir' && c.statusHRD === 'Lolos Seleksi HRD').length;
   const badgeCv = document.getElementById('subtab-cv-count');
   if (badgeCv) badgeCv.textContent = qualifiedCount;
 
@@ -167,7 +167,6 @@ function renderMitraVacanciesTable(items = null) {
 
       <td class="py-3.5 px-4 font-bold text-slate-800">
         <div class="flex items-center space-x-1.5">
-          <div class="w-2 h-2 rounded-full bg-blue-900"></div>
           <span>${v.partner_name}</span>
         </div>
       </td>
@@ -472,7 +471,7 @@ function renderThirdPartyGrid() {
   if (!tbody) return;
   tbody.innerHTML = '';
 
-  const qualified = (candidates || []).filter(c => c.statusHRD === 'Lolos Seleksi HRD');
+  const qualified = (candidates || []).filter(c => c.statusSortir === 'Lolos Sortir' && c.statusHRD === 'Lolos Seleksi HRD');
   currentThirdPartyList = qualified;
 
   // Update badges
@@ -487,7 +486,7 @@ function renderThirdPartyGrid() {
   if (qualified.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="7" class="p-12 text-center text-slate-400">
+        <td colspan="6" class="p-12 text-center text-slate-400">
           <div class="max-w-sm mx-auto space-y-2">
             <div class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center mx-auto text-slate-400">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -508,31 +507,25 @@ function renderThirdPartyGrid() {
   const startIndex = (thirdPartyPage - 1) * thirdPartyPageSize;
   const pageItems = qualified.slice(startIndex, startIndex + thirdPartyPageSize);
 
-  pageItems.forEach(c => {
+  pageItems.forEach((c, index) => {
     const topExp = (c.pengalaman && c.pengalaman.length > 0)
       ? `${c.pengalaman[0].posisi} (${c.pengalaman[0].perusahaan})`
       : 'Fresh Graduate';
 
-    const topCert = (c.sertifikat && c.sertifikat.length > 0)
-      ? `${c.sertifikat[0].nama}`
-      : '-';
-
-    const initials = c.nama.split(' ').map(n => n[0]).slice(0, 2).join('');
+    const rowNumber = startIndex + index + 1;
 
     const tr = document.createElement('tr');
     tr.className = 'hover:bg-slate-50/70 transition';
     tr.innerHTML = `
+      <td class="py-3 px-3 text-center font-bold text-slate-400 text-xs">
+        ${rowNumber}
+      </td>
       <td class="py-3 px-4">
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 rounded-xl bg-blue-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
-            ${initials}
-          </div>
-          <div class="min-w-0">
-            <button onclick="openCandidateDetail(${c.id})" class="text-slate-900 font-bold hover:text-blue-900 hover:underline cursor-pointer transition text-left block truncate">
-              ${c.nama}
-            </button>
-            <span class="text-[11px] text-slate-400 block">${c.domisili} (${c.usia} Thn)</span>
-          </div>
+        <div class="min-w-0">
+          <button onclick="openCandidateDetail(${c.id})" class="text-slate-900 font-bold hover:text-blue-900 hover:underline cursor-pointer transition text-left block truncate">
+            ${c.nama}
+          </button>
+          <span class="text-[11px] text-slate-400 block">${c.domisili} (${c.usia} Thn)</span>
         </div>
       </td>
       <td class="py-3 px-4">
@@ -540,35 +533,27 @@ function renderThirdPartyGrid() {
         <span class="text-[11px] text-slate-500 block truncate">${c.mitra}</span>
       </td>
       <td class="py-3 px-4">
-        <div class="font-semibold text-slate-800">${c.pendidikan}</div>
-        <div class="text-[11px] text-slate-500 truncate max-w-[140px]" title="${c.kampus}">${c.kampus}</div>
-      </td>
-      <td class="py-3 px-4">
         <div class="font-semibold text-slate-800 truncate max-w-[170px]" title="${topExp}">${topExp}</div>
         <span class="text-[10px] text-slate-400">Glints Verified</span>
       </td>
-      <td class="py-3 px-4">
-        <div class="font-medium text-emerald-800 text-[11px] truncate max-w-[160px]" title="${topCert}">${topCert}</div>
-      </td>
       <td class="py-3 px-4 text-center">
         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 whitespace-nowrap">
-          &check; ${c.statusHRD}
+          Lolos Seleksi
         </span>
-        ${(c.catatan && c.catatan !== '-') ? `<span class="block text-[10px] text-slate-500 italic mt-0.5 truncate max-w-[130px] mx-auto" title="${c.catatan}">${c.catatan}</span>` : ''}
       </td>
       <td class="py-3 px-4 text-right">
-        <div class="flex items-center justify-end space-x-1.5">
+        <div class="flex flex-col space-y-1.5 items-stretch w-[118px] ml-auto">
           <button onclick="openCandidateDetail(${c.id})" title="Lihat Profil & CV Lengkap"
-            class="px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center space-x-1 transition cursor-pointer shadow-2xs">
-            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            class="w-full justify-center px-2.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs flex items-center space-x-1 transition cursor-pointer shadow-2xs">
+            <svg class="w-3.5 h-3.5 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
               <polyline points="14 2 14 8 20 8" />
             </svg>
-            <span class="hidden xl:inline">Lihat CV</span>
+            <span>Lihat CV</span>
           </button>
           <button onclick="sendCvToMitra(${c.id})" title="Kirim Berkas CV ke Mitra"
-            class="px-3 py-1.5 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl text-xs transition cursor-pointer flex items-center space-x-1 shadow-xs active:scale-[0.98]">
-            <svg class="w-3.5 h-3.5 text-blue-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            class="w-full justify-center px-2.5 py-1.5 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl text-xs transition cursor-pointer flex items-center space-x-1 shadow-xs active:scale-[0.98]">
+            <svg class="w-3.5 h-3.5 text-blue-200 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8"/>
               <polyline points="15 16 19 20 23 16"/>
               <line x1="19" y1="10" x2="19" y2="20"/>

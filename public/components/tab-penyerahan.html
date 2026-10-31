@@ -1,19 +1,20 @@
 <!-- TAB 5: MASTER MITRA & PENYERAHAN CV KE PIHAK KETIGA -->
-      <!-- ============================================================== -->
-      <section id="tab-penyerahan" class="hidden space-y-6">
+<!-- ============================================================== -->
+<section id="tab-penyerahan" class="hidden space-y-6 min-w-0 max-w-full">
 
-          <!-- Header Banner Master Mitra & Penyerahan -->
+  <!-- Header Banner Master Mitra & Penyerahan -->
   <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
     <div>
       <h2 class="text-base font-bold text-slate-900">Master Mitra & Penyerahan Berkas CV</h2>
-      <p class="text-xs text-slate-500">Manajemen permintaan tenaga kerja mitra rekanan, kuota penempatan, dan penyerahan berkas kandidat lolos seleksi.</p>
+      <p class="text-xs text-slate-500">Manajemen permintaan tenaga kerja mitra rekanan, kuota penempatan, dan
+        penyerahan berkas kandidat lolos seleksi.</p>
     </div>
     <div class="pt-2.5 border-t border-slate-100 flex flex-wrap items-center gap-2">
       <button onclick="openAddVacancyModal()"
         class="px-3.5 py-2 bg-blue-900 hover:bg-blue-800 text-white font-semibold rounded-xl text-xs transition shadow-xs flex items-center space-x-1.5 cursor-pointer active:scale-[0.98]">
         <svg class="w-3.5 h-3.5 text-blue-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <line x1="12" y1="5" x2="12" y2="19"/>
-          <line x1="5" y1="12" x2="19" y2="12"/>
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
         <span>Tambah Permintaan Mitra</span>
       </button>
@@ -29,159 +30,166 @@
     </div>
   </div>
 
-        <!-- Sub-Nav Segmented Controls (Apple HIG) -->
-        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-          <div class="inline-flex p-1 bg-slate-100 rounded-2xl border border-slate-200 text-xs font-bold space-x-1">
-            <button id="subtab-btn-mitra" onclick="switchMitraSubTab('mitra')"
-              class="px-4 py-2 rounded-xl transition shadow-xs bg-blue-900 text-white cursor-pointer flex items-center space-x-2">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-              </svg>
-              <span>Permintaan Mitra Aktif</span>
-              <span id="subtab-mitra-count" class="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-white">0</span>
-            </button>
-            <button id="subtab-btn-cv" onclick="switchMitraSubTab('cv')"
-              class="px-4 py-2 rounded-xl transition text-slate-600 hover:text-slate-900 hover:bg-white/60 cursor-pointer flex items-center space-x-2">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-              </svg>
-              <span>Kirim CV ke Mitra</span>
-              <span id="subtab-cv-count" class="px-1.5 py-0.2 rounded-full text-[10px] bg-red-100 text-red-700">0</span>
-            </button>
-          </div>
-        </div>
+  <!-- Sub-Nav Segmented Controls (Apple HIG) -->
+  <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+    <div class="inline-flex p-1 bg-slate-100 rounded-2xl border border-slate-200 text-xs font-bold space-x-1">
+      <button id="subtab-btn-mitra" onclick="switchMitraSubTab('mitra')"
+        class="px-4 py-2 rounded-xl transition shadow-xs bg-blue-900 text-white cursor-pointer flex items-center space-x-2">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+        </svg>
+        <span>Permintaan Mitra Aktif</span>
+        <span id="subtab-mitra-count" class="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-white">0</span>
+      </button>
+      <button id="subtab-btn-cv" onclick="switchMitraSubTab('cv')"
+        class="px-4 py-2 rounded-xl transition text-slate-600 hover:text-slate-900 hover:bg-white/60 cursor-pointer flex items-center space-x-2">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+        </svg>
+        <span>Kirim CV ke Mitra</span>
+        <span id="subtab-cv-count" class="px-1.5 py-0.2 rounded-full text-[10px] bg-red-100 text-red-700">0</span>
+      </button>
+    </div>
+  </div>
 
-        <!-- SUB-VIEW 1: MASTER DATA PERMINTAAN MITRA AKTIF (CRUD) -->
-        <div id="subview-mitra-vacancies" class="space-y-6">
+  <!-- SUB-VIEW 1: MASTER DATA PERMINTAAN MITRA AKTIF (CRUD) -->
+  <div id="subview-mitra-vacancies" class="space-y-6">
 
-          <!-- 4 Mini KPI Cards Permintaan Mitra -->
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Permintaan Posisi</span>
-              <p class="text-xl font-extrabold text-slate-900" id="mitra-kpi-total-pos">--</p>
-              <span class="text-[11px] text-blue-900 font-medium">Lowongan Terdaftar</span>
-            </div>
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Target Kuota Mitra</span>
-              <p class="text-xl font-extrabold text-blue-900" id="mitra-kpi-total-quota">--</p>
-              <span class="text-[11px] text-slate-500">Kebutuhan Tenaga Kerja</span>
-            </div>
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kandidat Lolos Seleksi</span>
-              <p class="text-xl font-extrabold text-emerald-600" id="mitra-kpi-total-filled">--</p>
-              <span class="text-[11px] text-emerald-700 font-medium">Siap Penempatan</span>
-            </div>
-            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Rasio Pemenuhan</span>
-              <p class="text-xl font-extrabold text-slate-800" id="mitra-kpi-fill-rate">--%</p>
-              <span class="text-[11px] text-slate-500">Terhadap Total Target</span>
-            </div>
-          </div>
+    <!-- 4 Mini KPI Cards Permintaan Mitra -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Permintaan Posisi</span>
+        <p class="text-xl font-extrabold text-slate-900" id="mitra-kpi-total-pos">--</p>
+        <span class="text-[11px] text-blue-900 font-medium">Lowongan Terdaftar</span>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Target Kuota Mitra</span>
+        <p class="text-xl font-extrabold text-blue-900" id="mitra-kpi-total-quota">--</p>
+        <span class="text-[11px] text-slate-500">Kebutuhan Tenaga Kerja</span>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kandidat Lolos Seleksi</span>
+        <p class="text-xl font-extrabold text-emerald-600" id="mitra-kpi-total-filled">--</p>
+        <span class="text-[11px] text-emerald-700 font-medium">Siap Penempatan</span>
+      </div>
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Rasio Pemenuhan</span>
+        <p class="text-xl font-extrabold text-slate-800" id="mitra-kpi-fill-rate">--%</p>
+        <span class="text-[11px] text-slate-500">Terhadap Total Target</span>
+      </div>
+    </div>
 
-          <!-- Filter & Action Toolbar -->
-          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="w-full sm:w-80 relative">
-              <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-              </svg>
-              <input type="text" id="search-mitra-input" oninput="filterMitraVacancies()" placeholder="Cari posisi atau nama mitra..."
-                class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium" />
-            </div>
+    <!-- Filter & Action Toolbar -->
+    <div
+      class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="w-full sm:w-80 relative">
+        <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor"
+          stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input type="text" id="search-mitra-input" oninput="filterMitraVacancies()"
+          placeholder="Cari posisi atau nama mitra"
+          class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium" />
+      </div>
 
-            <div class="w-full sm:w-auto flex items-center justify-end space-x-2">
-              <select id="filter-mitra-status" onchange="filterMitraVacancies()"
-                class="px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium bg-white">
-                <option value="ALL">Semua Status (Aktif & Arsip)</option>
-                <option value="Dibuka" selected>Status: Dibuka (Aktif)</option>
-                <option value="Ditutup">Status: Ditutup</option>
-                <option value="Arsip">Status: Arsip</option>
-              </select>
+      <div class="w-full sm:w-auto flex items-center justify-end space-x-2">
+        <select id="filter-mitra-status" onchange="filterMitraVacancies()"
+          class="px-3 py-2 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 font-medium bg-white">
+          <option value="ALL">Semua Status (Aktif & Arsip)</option>
+          <option value="Dibuka" selected>Status: Dibuka (Aktif)</option>
+          <option value="Ditutup">Status: Ditutup</option>
+          <option value="Arsip">Status: Arsip</option>
+        </select>
 
-              <button onclick="fetchVacancies()" title="Muat Ulang Data"
-                class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
-                </svg>
-              </button>
-            </div>
-          </div>
+        <button onclick="fetchVacancies()" title="Muat Ulang Data"
+          class="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+          </svg>
+        </button>
+      </div>
+    </div>
 
-          <!-- Table Container (Permintaan Mitra Aktif) -->
-          <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
-                    <th class="py-3.5 px-4">Posisi & Penempatan</th>
-                    <th class="py-3.5 px-4">Perusahaan Mitra (Pihak Ke-3)</th>
-                    <th class="py-3.5 px-4">Kualifikasi Minimum</th>
-                    <th class="py-3.5 px-4">Target Kuota & Terisi</th>
-                    <th class="py-3.5 px-4 text-center">Status</th>
-                    <th class="py-3.5 px-4 text-right">Aksi Kelola</th>
-                  </tr>
-                </thead>
-                <tbody id="mitra-vacancies-tbody" class="divide-y divide-slate-100 text-slate-700">
-                  <!-- Populated dynamically via renderMitraVacanciesTable() -->
-                  <tr>
-                    <td colspan="6" class="p-8 text-center text-slate-400">Memuat data permintaan mitra aktif...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+    <!-- Table Container (Permintaan Mitra Aktif) -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div class="overflow-x-auto min-w-0">
+        <table class="w-full min-w-[700px] text-left text-xs border-collapse">
+          <thead>
+            <tr
+              class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+              <th class="py-3.5 px-4">Posisi & Penempatan</th>
+              <th class="py-3.5 px-4">Perusahaan Mitra</th>
+              <th class="py-3.5 px-4">Kualifikasi Minimum</th>
+              <th class="py-3.5 px-4">Target Kuota</th>
+              <th class="py-3.5 px-4 text-center">Status</th>
+              <th class="py-3.5 px-4 text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="mitra-vacancies-tbody" class="divide-y divide-slate-100 text-slate-700">
+            <!-- Populated dynamically via renderMitraVacanciesTable() -->
+            <tr>
+              <td colspan="6" class="p-8 text-center text-slate-400">Memuat data permintaan mitra aktif...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-            <!-- Pagination Bar for Permintaan Mitra -->
-            <div id="mitra-vacancies-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
-              <!-- Populated dynamically via renderPaginationBar() -->
-            </div>
-          </div>
+      <!-- Pagination Bar for Permintaan Mitra -->
+      <div id="mitra-vacancies-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
+        <!-- Populated dynamically via renderPaginationBar() -->
+      </div>
+    </div>
 
-        </div>
+  </div>
 
-        <!-- SUB-VIEW 2: TABEL PENYERAHAN CV KANDIDAT TERPILIH -->
-        <div id="subview-cv-handover" class="hidden space-y-4">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-1">
-            <div>
-              <h3 class="text-base font-bold text-slate-900">Daftar Kandidat Terpilih Siap Penyerahan</h3>
-              <p class="text-xs text-slate-500">Kandidat yang telah lulus seleksi wawancara HRD untuk diserahkan ke masing-masing mitra perusahaan.</p>
-            </div>
-            <div class="flex items-center space-x-2">
-              <span id="thirdparty-count-badge" class="px-3 py-1.5 rounded-xl bg-blue-50 text-blue-900 border border-blue-200 text-xs font-semibold whitespace-nowrap">
-                -- Kandidat Siap Serah
-              </span>
-            </div>
-          </div>
+  <!-- SUB-VIEW 2: TABEL PENYERAHAN CV KANDIDAT TERPILIH -->
+  <div id="subview-cv-handover" class="hidden space-y-4">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-1">
+      <div>
+        <h3 class="text-base font-bold text-slate-900">Daftar Kandidat Terpilih Siap Penyerahan</h3>
+        <p class="text-xs text-slate-500">Kandidat yang telah lulus seleksi wawancara HRD untuk diserahkan ke
+          masing-masing mitra perusahaan.</p>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span id="thirdparty-count-badge"
+          class="px-3 py-1.5 rounded-xl bg-blue-50 text-blue-900 border border-blue-200 text-xs font-semibold whitespace-nowrap">
+          -- Kandidat Siap Serah
+        </span>
+      </div>
+    </div>
 
-          <!-- Table Container (Kandidat Lolos HRD Siap Penyerahan) -->
-          <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
-                    <th class="py-3.5 px-4">Kandidat</th>
-                    <th class="py-3.5 px-4">Posisi & Mitra Rekanan</th>
-                    <th class="py-3.5 px-4">Pendidikan</th>
-                    <th class="py-3.5 px-4">Pengalaman Kerja</th>
-                    <th class="py-3.5 px-4">Sertifikasi</th>
-                    <th class="py-3.5 px-4 text-center">Status HRD</th>
-                    <th class="py-3.5 px-4 text-right">Aksi Penyerahan</th>
-                  </tr>
-                </thead>
-                <tbody id="thirdparty-tbody" class="divide-y divide-slate-100 text-slate-700">
-                  <!-- Populated dynamically via renderThirdPartyGrid() -->
-                  <tr>
-                    <td colspan="7" class="p-8 text-center text-slate-400">Memuat data kandidat siap penyerahan...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+    <!-- Table Container (Kandidat Lolos HRD Siap Penyerahan) -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div class="overflow-x-auto min-w-0">
+        <table class="w-full min-w-[700px] text-left text-xs border-collapse">
+          <thead>
+            <tr
+              class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+              <th class="py-3.5 px-3 text-center w-12">No</th>
+              <th class="py-3.5 px-4">Kandidat</th>
+              <th class="py-3.5 px-4">Posisi & Mitra Rekanan</th>
+              <th class="py-3.5 px-4">Pengalaman Kerja</th>
+              <th class="py-3.5 px-4 text-center">Status Seleksi</th>
+              <th class="py-3.5 px-4 text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="thirdparty-tbody" class="divide-y divide-slate-100 text-slate-700">
+            <!-- Populated dynamically via renderThirdPartyGrid() -->
+            <tr>
+              <td colspan="6" class="p-8 text-center text-slate-400">Memuat data kandidat siap penyerahan...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-            <!-- Pagination Bar for Kirim CV ke Mitra -->
-            <div id="thirdparty-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
-              <!-- Populated dynamically via renderPaginationBar() -->
-            </div>
-          </div>
-        </div>
+      <!-- Pagination Bar for Kirim CV ke Mitra -->
+      <div id="thirdparty-pagination" class="p-3.5 sm:p-4 border-t border-slate-100 bg-slate-50/50">
+        <!-- Populated dynamically via renderPaginationBar() -->
+      </div>
+    </div>
+  </div>
 
-      </section>
+</section>
